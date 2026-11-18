@@ -1,0 +1,217 @@
+/* 시안 B 공용 — 밝은 회색 바탕, Pretendard 하나. 브라우저 창에 맞춰 늘고 줄어든다
+   상태 칸: R·I·D는 꽉 찬 색, S만 옅은 회색 면 (R과 밝기 차이를 크게 두어 색약도 구분).
+   --s-bg 진한 회색은 그래프 막대용으로 남겨 둔다 */
+:root {
+  --bg: #eef0f2; --surface: #ffffff; --surface-2: #f5f6f8; --surface-3: #e7e9ec;
+  --line: rgba(20,24,31,.09); --line-2: rgba(20,24,31,.18); --line-3: #626a75;
+  --text: #16191d; --text-2: #4a515b; --text-3: #626a75;
+  --accent: #2149c4; --accent-soft: rgba(33,73,196,.08);
+  --r-bg: #32864e; --r-tx: #ffffff;
+  --s-bg: #6b717b; --s-tx: #ffffff; --s-soft: #e3e5e9; --s-ink: #3f454e;
+  --i-bg: #f1c21b; --i-tx: #1b1600;
+  --d-bg: #c62828; --d-tx: #ffffff;
+  --warn: #a67c00; --warn-tx: #7a5c00; --danger: #c62828;
+  --d-tint: #fbe9e9; --i-tint: #fdf3d0;
+  --on-dark-2: #c3c8cf; --danger-on-dark: #ff9a9a; --shadow-pop: 0 8px 24px rgba(20,24,31,.18);
+  --r-sm: 4px; --r-md: 6px; --r-lg: 8px;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px;
+  --fs-2xs: 12px; --fs-xs: 13px; --fs-sm: 14px; --fs-md: 15px; --fs-lg: 17px; --fs-h: 17px; --fs-xl: 22px; --fs-2xl: 30px; --fs-3xl: 38px;
+  --font: 'Pretendard', 'Malgun Gothic', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { height: 100%; overflow: auto; }
+body { margin: 0; height: 100vh; min-height: 720px; min-width: 1280px; background: var(--bg); color: var(--text); font: 400 var(--fs-md)/1.45 var(--font); font-variant-numeric: tabular-nums; display: grid; grid-template-rows: 52px minmax(0, 1fr); }
+button, input, select { font: inherit; color: inherit; }
+a { color: inherit; }
+
+/* 헤더 */
+.top { display: flex; align-items: stretch; gap: 32px; padding: 0 var(--sp-6); background: var(--surface); border-bottom: 1px solid var(--line-2); }
+.brand { display: flex; align-items: center; gap: 10px; font-size: var(--fs-lg); font-weight: 600; text-decoration: none; }
+.brand svg { width: 20px; height: 20px; stroke-width: 1.75; }
+.nav { display: flex; gap: var(--sp-1); }
+.nav a { display: flex; align-items: center; padding: 0 14px; color: var(--text-2); text-decoration: none; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .15s ease; }
+.nav a:hover { color: var(--text); }
+.nav a.on { color: var(--text); font-weight: 600; border-bottom-color: var(--text); }
+.top .r { margin-left: auto; display: flex; align-items: center; gap: var(--sp-5); color: var(--text-2); }
+.clock b { color: var(--text); font-weight: 600; margin-left: var(--sp-2); }
+.bell { border: 0; background: none; position: relative; display: grid; place-items: center; width: 36px; height: 36px; color: var(--text-2); border-radius: var(--r-md); cursor: pointer; }
+.bell:hover { background: var(--surface-2); }
+.bell svg, .me svg { width: 18px; height: 18px; stroke-width: 1.5; }
+.bell span { position: absolute; top: 2px; right: 0; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--d-bg); color: var(--d-tx); font-size: var(--fs-2xs); font-weight: 600; line-height: 16px; text-align: center; }
+.me { text-decoration: none; display: flex; align-items: center; gap: var(--sp-2); }
+
+/* 공통 틀 */
+.page { padding: var(--sp-4) var(--sp-6) var(--sp-6); min-height: 0; display: grid; gap: var(--sp-4); }
+/* 화면 맨 위 제목·이동 경로 줄: 요약 숫자가 들어가는 공정 상세 화면 기준 높이로 모든 화면 통일 */
+.page > .head { min-height: 64px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--sp-5); min-height: 0; min-width: 0; display: flex; flex-direction: column; }
+.ph { display: flex; align-items: center; gap: var(--sp-3); margin-bottom: var(--sp-4); flex: none; }
+.ph h2 { margin: 0; font-size: var(--fs-h); font-weight: 600; }
+.ph .meta { color: var(--text-3); font-size: var(--fs-sm); }
+.ph .r { margin-left: auto; display: flex; gap: var(--sp-4); align-items: center; }
+.fill { flex: 1; min-height: 0; }
+.scroll { overflow: auto; }
+
+/* 이동 경로 · 탭 */
+.crumbs { display: flex; align-items: center; gap: var(--sp-4); }
+.crumb { display: flex; align-items: center; gap: 6px; color: var(--text-3); font-size: var(--fs-md); }
+.crumb a { color: var(--text-2); text-decoration: none; }
+.crumb a:hover { color: var(--text); text-decoration: underline; }
+.crumb b { color: var(--text); font-weight: 600; font-size: var(--fs-xl); }
+.crumb svg { width: 14px; height: 14px; }
+.tabs { display: inline-flex; border: 1px solid var(--line-2); border-radius: var(--r-md); overflow: hidden; background: var(--surface); }
+.tabs a, .tabs button { border: 0; background: none; height: 36px; padding: 0 14px; display: flex; align-items: center; color: var(--text-2); text-decoration: none; cursor: pointer; border-left: 1px solid var(--line); }
+.tabs > :first-child { border-left: 0; }
+.tabs .on { background: var(--text); color: var(--surface); font-weight: 500; }
+.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: var(--r-md); overflow: hidden; }
+.seg button { border: 0; background: var(--surface); height: 32px; padding: 0 12px; color: var(--text-2); font-size: var(--fs-sm); cursor: pointer; border-left: 1px solid var(--line); }
+.seg button:first-child { border-left: 0; }
+.seg button.on { background: var(--text); color: var(--surface); }
+.seg button, .tabs a, .tabs button, .chleg span, .btn { white-space: nowrap; }
+.field { display: flex; flex-direction: column; gap: var(--sp-1); }
+.field > span { color: var(--text-3); font-size: var(--fs-xs); }
+.select { height: 36px; min-width: 120px; padding: 0 32px 0 10px; border: 1px solid var(--line-2); border-radius: var(--r-md); background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%23626a75' stroke-width='1.5'%3E%3Cpath d='m3 4.5 3 3 3-3'/%3E%3C/svg%3E") no-repeat right 10px center; appearance: none; }
+.btn { height: 36px; padding: 0 14px; border-radius: var(--r-md); border: 1px solid var(--line-2); background: var(--surface); cursor: pointer; transition: background-color .15s ease; }
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--text); color: var(--surface); border-color: var(--text); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* 숫자 */
+.st-l { color: var(--text-2); font-size: var(--fs-sm); }
+.st-v { font-size: var(--fs-3xl); font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+.st-v small { font-size: var(--fs-lg); color: var(--text-2); font-weight: 500; margin-left: 2px; letter-spacing: 0; }
+.st-sub { color: var(--text-3); font-size: var(--fs-xs); }
+
+/* 상태 */
+.s-R { background: var(--r-bg); color: var(--r-tx); }
+.s-S { background: var(--s-soft); color: var(--s-ink); box-shadow: inset 0 0 0 1px var(--line-3); }
+.s-S .c-name { color: var(--text); }
+.s-I { background: var(--i-bg); color: var(--i-tx); box-shadow: inset 0 0 0 1px var(--warn); }
+.s-D { background: var(--d-bg); color: var(--d-tx); }
+.pdm-warn { outline: 3px solid var(--warn); outline-offset: 2px; }
+.pdm-danger { outline: 3px dashed var(--danger); outline-offset: 2px; }
+
+/* 표시등: 칩(색 상자 안 글자) 대신 관제반 램프처럼 작은 사각 + 글자.
+   꽉 찬 램프 = 설비 상태(R/S/I/D), 빈 테두리 램프 = 예지보전 등급(주의·위험). 배치도 칸 테두리 규칙과 같은 말 */
+.code, .al-code, .grade { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; line-height: 1.2; white-space: nowrap; vertical-align: -1px; }
+.code::before, .al-code::before, .grade::before { content: ''; flex: none; width: 14px; height: 14px; border-radius: 3px; background: var(--lamp, var(--text-3)); box-shadow: inset 0 0 0 var(--lamp-w, 0) var(--lamp-edge, transparent); }
+.code[class*="s-"], .al-code[class*="s-"] { background: none; color: var(--text); box-shadow: none; }
+.code.s-R, .al-code.s-R { --lamp: var(--r-bg); }
+.code.s-S, .al-code.s-S { --lamp: var(--s-bg); }
+.code.s-I, .al-code.s-I { --lamp: var(--i-bg); --lamp-w: 1px; --lamp-edge: var(--warn); }
+.code.s-D, .al-code.s-D { --lamp: var(--d-bg); }
+.grade, .al-code.pdm { --lamp: transparent; --lamp-w: 2px; }
+.grade.danger, .al-code.pdm { color: var(--danger); --lamp-edge: var(--danger); }
+.grade.warn { color: var(--warn-tx); --lamp-edge: var(--warn); }
+.grade.ok { color: var(--text-3); font-weight: 400; --lamp-edge: var(--line-2); }
+
+/* 차트 */
+.ch-grid { stroke: var(--line); } .ch-lab { fill: var(--text-3); font-size: var(--fs-2xs); }
+.ch-target, .ch-limit { stroke: var(--text-3); stroke-dasharray: 4 4; fill: none; }
+.ch-limit-lab { fill: var(--text-2); font-size: var(--fs-2xs); }
+.ch-band80 { stroke: var(--warn); stroke-opacity: .55; }
+.ch-band90 { stroke: var(--danger); stroke-opacity: .45; }
+.ch-actual { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; }
+.ch-dot { fill: var(--accent); } .ch-now { stroke: var(--line-2); }
+.ch-over { fill: var(--danger); }
+.ch-ref { fill: none; stroke: var(--text-3); stroke-width: 1.5; stroke-dasharray: 2 3; }
+.ch-thin { fill: none; stroke: var(--text-2); stroke-width: 1.25; stroke-linejoin: round; }
+.ch-gap { fill: var(--warn); fill-opacity: .16; }
+.ch-bar { fill: var(--text-2); } .ch-bar.on { fill: var(--accent); }
+.chleg { display: flex; gap: var(--sp-4); color: var(--text-2); font-size: var(--fs-xs); }
+.chleg span { display: inline-flex; align-items: center; gap: 6px; }
+.chleg i { width: 16px; border-top: 2px solid var(--accent); }
+.chleg i.t { border-top: 1.5px dashed var(--text-3); }
+.chleg i.ref { border-top: 1.5px dotted var(--text-3); }
+.chleg i.thin { border-top: 1.5px solid var(--text-2); }
+.chleg i.gap { height: 10px; border: 0; background: var(--warn); opacity: .35; }
+
+/* 표 */
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 500; color: var(--text-3); font-size: var(--fs-xs); padding: 0 var(--sp-3) var(--sp-2); border-bottom: 1px solid var(--line-2); white-space: nowrap; }
+.tbl td { padding: 10px var(--sp-3); border-bottom: 1px solid var(--line); white-space: nowrap; }
+.tbl .num { text-align: right; }
+.tbl td.wrap { white-space: normal; }
+.tbl tr.link { cursor: pointer; } .tbl tr.link:hover td { background: var(--surface-2); }
+.empty { color: var(--text-3); display: grid; place-items: center; }
+
+/* 설비 칸 (배치도·라인 흐름) */
+.legend { display: flex; gap: var(--sp-5); color: var(--text-2); font-size: var(--fs-sm); }
+.legend span { display: inline-flex; align-items: center; gap: var(--sp-2); }
+/* 상태 열쇠 칸: 범례·설비 대수에서 색 칸 안에 코드 글자, 옆에 명칭. 배치도 칸과 같은 색 */
+.legend i, .rsid .code, .key { display: inline-grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: var(--r-sm); font-style: normal; font-size: var(--fs-xs); font-weight: 700; line-height: 1; }
+.rsid .code::before { content: none; }
+.rsid .code.s-R, .key.s-R { background: var(--r-bg); color: var(--r-tx); }
+.rsid .code.s-S, .key.s-S { background: var(--s-soft); color: var(--s-ink); box-shadow: inset 0 0 0 1px var(--line-3); }
+.rsid .code.s-I, .key.s-I { background: var(--i-bg); color: var(--i-tx); box-shadow: inset 0 0 0 1px var(--warn); }
+.rsid .code.s-D, .key.s-D { background: var(--d-bg); color: var(--d-tx); }
+.legend b { color: var(--text); font-weight: 600; margin-left: 2px; }
+.legend i.lg-warn, .legend i.lg-danger { width: 16px; height: 16px; margin: 0 3px; outline-offset: 0; }
+.legend i.lg-warn { outline: 2px solid var(--warn); } .legend i.lg-danger { outline: 2px dashed var(--danger); }
+.cell { container-type: size; position: relative; min-width: 0; height: 100%; padding: 6px var(--sp-2); border-radius: var(--r-sm); cursor: pointer; }
+.c-in { height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+.c-top { display: flex; justify-content: space-between; gap: var(--sp-1); }
+.c-name { font-size: var(--fs-xs); line-height: 1.2; white-space: nowrap; }
+.c-row { display: flex; align-items: baseline; gap: 6px; }
+.c-code { font-size: 20px; font-weight: 700; line-height: 1; }
+.c-word { font-size: var(--fs-xs); }
+.c-dur, .c-sub { margin-left: auto; font-size: var(--fs-xs); font-weight: 600; }
+.c-num { font-size: 20px; font-weight: 700; line-height: 1; }
+.c-pdm { font-size: var(--fs-xs); line-height: 1.2; white-space: nowrap; font-weight: 600; }
+@container (max-width: 100px) { .c-word { display: none; } }
+@container (max-width: 150px) { .inb .c-word { display: none; } }
+/* 창이 낮아 칸이 얕으면 이름과 상태를 한 줄로 */
+@container (max-height: 34px) { .c-in { flex-direction: row; align-items: center; gap: 4px; } .c-top { min-width: 0; } .c-name { overflow: hidden; text-overflow: ellipsis; } .c-row { margin-left: auto; flex: none; } .c-word, .c-sub, .c-pdm-w { display: none; } .c-pdm { flex: none; } }
+.inb { background: var(--surface); box-shadow: inset 0 0 0 1.5px var(--line-3); }
+.inb .c-name, .inb .c-word, .inb .c-sub { color: var(--text-2); }
+
+
+/* 알림 목록 (대시보드·라인 상세) */
+.alerts ul { list-style: none; margin: 0; padding: 0; overflow: auto; }
+.al { display: grid; grid-template-columns: 52px 1fr auto; gap: var(--sp-3); align-items: start; padding: var(--sp-4) var(--sp-5); border-top: 1px solid var(--line); cursor: pointer; }
+.al:hover { background: var(--surface-2); }
+.al.off { background: var(--surface-2); }
+.al.off .al-eq, .al.off .al-msg { color: var(--text-3); }
+.al.off .al-code { opacity: .45; }
+.al-code { font-size: var(--fs-sm); }
+/* 진행 중인 이상(고장 D · 대기 I · 예지보전 위험 P)만 옅은 바탕. 정상·정지·해제된 행은 바탕 없음 */
+.al.t-D, .al.t-P, .hist li.t-D, .tbl tr.t-D td, .tbl tr.t-P td { background: var(--d-tint); }
+.al.t-I, .hist li.t-I, .tbl tr.t-I td { background: var(--i-tint); }
+.al-code.pdm { font-size: var(--fs-xs); }
+/* 상태 코드(알림·표·목록): 범례·설비 대수와 같은 열쇠 칸(색 칸 안에 코드 글자). 예지보전 위험은 빨강 테두리 칸 */
+.code[class*="s-"], .al-code[class*="s-"], .al-code.pdm { justify-self: start; display: inline-grid; place-items: center; height: 26px; min-width: 26px; border-radius: var(--r-sm); font-size: var(--fs-sm); font-weight: 700; }
+.code[class*="s-"]::before, .al-code[class*="s-"]::before, .al-code.pdm::before { content: none; }
+.code.s-R, .al-code.s-R { background: var(--r-bg); color: var(--r-tx); }
+.code.s-S, .al-code.s-S { background: var(--s-soft); color: var(--s-ink); box-shadow: inset 0 0 0 1px var(--line-3); }
+.code.s-I, .al-code.s-I { background: var(--i-bg); color: var(--i-tx); box-shadow: inset 0 0 0 1px var(--warn); }
+.code.s-D, .al-code.s-D { background: var(--d-bg); color: var(--d-tx); }
+/* 표·목록 안 상태 코드는 한 단계 작게 (글자 줄 높이에 맞춤) */
+.code[class*="s-"] { height: 22px; min-width: 22px; padding: 0 5px; font-size: var(--fs-xs); vertical-align: middle; }
+.al-code.pdm { padding: 0 6px; color: var(--danger); box-shadow: inset 0 0 0 2px var(--danger); font-size: var(--fs-xs); }
+.al-eq { font-weight: 600; }
+.al-msg { color: var(--text-2); font-size: var(--fs-sm); }
+.al-meta { display: flex; flex-direction: column; align-items: flex-end; color: var(--text-3); font-size: var(--fs-xs); }
+.al.on .al-dur { color: var(--text); font-size: var(--fs-md); font-weight: 600; }
+.al-btn { margin-top: var(--sp-2); display: inline-flex; align-items: center; color: var(--text); text-decoration: none; height: 32px; padding: 0 10px; border-radius: var(--r-md); border: 1px solid var(--line-2); background: var(--surface); font-size: var(--fs-xs); cursor: pointer; }
+
+
+/* 요약 열: 화면 왼쪽 세로 한 열에 핵심 숫자를 위에서 아래로 (가로 띠를 다시 세로선으로 나누지 않음).
+   라인 상세의 'L2 지금'과 같은 구조. 가동률·생산 조회·일일 리포트에서 씀 */
+.withk { display: grid; grid-template-columns: clamp(280px, 17vw, 320px) minmax(0, 1fr); gap: var(--sp-4); min-height: 0; }
+.kright { display: grid; gap: var(--sp-4); min-height: 0; min-width: 0; }
+.kcol { gap: var(--sp-4); }
+.kcol .k { flex: 1; min-height: 0; }
+.kcol .ph { margin-bottom: 0; }
+.kcol .k { border-top: 1px solid var(--line); padding-top: var(--sp-5); }
+.kcol .k .st-l { font-size: var(--fs-sm); margin-bottom: var(--sp-1); }
+.kcol .k .st-v { font-size: var(--fs-3xl); }
+.kcol .k.lead .st-v { font-size: 48px; }
+.kcol .k .st-sub { margin-top: var(--sp-1); }
+.kbar { height: 8px; margin-top: var(--sp-3); background: var(--surface-3); border-radius: 2px; }
+.kbar i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+.klist { list-style: none; margin: var(--sp-3) 0 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
+.klist li { display: flex; justify-content: space-between; color: var(--text-2); }
+.klist li b { color: var(--text); font-weight: 600; }
+@media (max-height: 860px) {
+  .kcol .k { padding-top: var(--sp-3); } .kcol .k .st-v { font-size: var(--fs-2xl); } .kcol .k.lead .st-v { font-size: var(--fs-3xl); } .klist { gap: 0; }
+}

@@ -1,0 +1,21 @@
+# 비밀번호가 들어가는 파일 (절대 올리지 않아요)
+application-local.yml
+.env
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# 기타
+.vscode/
+*.log
+.DS_Store
+Thumbs.db

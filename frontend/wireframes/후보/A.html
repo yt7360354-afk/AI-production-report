@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>후보 A · 관제실</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+.c-in { display: contents; }
+/* 후보 A — 관제실: 어두운 흑연색, 정상(R)은 낮은 채도로 가라앉히고 이상만 꽉 찬 색 */
+:root {
+  --bg: #0f1012; --surface: #17181b; --surface-2: #1e1f23; --surface-3: #26282c;
+  --line: rgba(255,255,255,.07); --line-2: rgba(255,255,255,.12);
+  --text: #e6e7e9; --text-2: #a4a7ad; --text-3: #878b93;
+  --accent: #6ea8ff;
+  --r-bg: rgba(52,168,96,.14); --r-bd: rgba(52,168,96,.42); --r-tx: #7fd3a0;
+  --s-bg: #2a2c31; --s-tx: #b4b7bd;
+  --i-bg: #e2b30b; --i-tx: #1b1600;
+  --d-bg: #c93a3a; --d-tx: #ffffff;
+  --warn: #e2b30b; --danger: #ff6b6b;
+  --dot: #8a8f98;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+  --font: 'Pretendard', 'Malgun Gothic', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; }
+body { background: var(--bg); color: var(--text); font: 400 14px/1.45 var(--font); font-variant-numeric: tabular-nums; display: grid; grid-template-columns: 216px 1fr; }
+button { font: inherit; color: inherit; }
+
+/* 사이드 메뉴 */
+.side { border-right: 1px solid var(--line); padding: 20px 12px; display: flex; flex-direction: column; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; font-size: 16px; font-weight: 600; }
+.brand i { width: 10px; height: 10px; border-radius: 2px; background: var(--r-tx); }
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: var(--r-sm); color: var(--text-2); text-decoration: none; }
+.nav a svg { width: 18px; height: 18px; stroke-width: 1.5; }
+.nav a.on { background: var(--surface-2); color: var(--text); box-shadow: inset 0 0 0 1px var(--line-2); }
+.side .me { margin-top: auto; display: flex; align-items: center; gap: 10px; padding: 0 10px; color: var(--text-2); }
+.side .me svg { width: 18px; height: 18px; stroke-width: 1.5; }
+
+/* 본문 */
+.main { display: grid; grid-template-rows: 56px 1fr; min-width: 0; }
+.top { display: flex; align-items: center; gap: 16px; padding: 0 24px; border-bottom: 1px solid var(--line); }
+.top h1 { margin: 0; font-size: 18px; font-weight: 500; }
+.top .clock { margin-left: auto; color: var(--text-2); }
+.top .clock b { color: var(--text); font-weight: 500; margin-left: 8px; }
+.bell { border: 0; background: none; position: relative; display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--r-sm); color: var(--text-2); }
+.bell svg { width: 18px; height: 18px; stroke-width: 1.5; }
+.bell span { position: absolute; top: 4px; right: 2px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--d-bg); color: var(--d-tx); font-size: 11px; line-height: 16px; text-align: center; }
+
+.content { display: grid; grid-template-columns: 1fr 400px; gap: 16px; padding: 16px 24px 24px; min-height: 0; }
+.col { display: grid; grid-template-rows: auto 1fr; gap: 16px; min-height: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; min-height: 0; min-width: 0; }
+.ph { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.ph h2 { margin: 0; font-size: 15px; font-weight: 500; }
+.ph .meta { color: var(--text-3); font-size: 13px; }
+.ph .r { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+.seg { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); }
+.seg button { border: 0; background: none; height: 28px; padding: 0 12px; border-radius: 6px; color: var(--text-2); font-size: 13px; }
+.seg button.on { background: var(--surface-3); color: var(--text); }
+.legend { display: flex; gap: 12px; color: var(--text-2); font-size: 12px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; }
+
+/* 배치도 */
+.map { --cw: 108px; --ch: 76px; --gap: 8px; --gg: 24px; --conn: 28px; --side: 100px; }
+.m-head, .m-body { display: grid; grid-template-columns: var(--side) var(--conn) 1fr var(--conn) var(--side) var(--conn) var(--side); }
+.m-head { color: var(--text-3); font-size: 12px; margin-bottom: 8px; }
+.m-head > span { text-align: center; }
+.m-heq { display: grid; grid-template-columns: 76px var(--cw) var(--gg) calc(var(--cw) * 4 + var(--gap) * 3) var(--gg) var(--cw); }
+.m-heq span:nth-child(2) { grid-column: 2; } .m-heq span:nth-child(3) { grid-column: 4; } .m-heq span:nth-child(4) { grid-column: 6; }
+.m-heq span { text-align: center; }
+.m-body { position: relative; }
+.m-lines { display: flex; flex-direction: column; gap: 12px; }
+.m-line { position: relative; display: flex; align-items: center; height: var(--ch); }
+.m-line::before { content: ''; position: absolute; left: calc(var(--conn) / -2); right: calc(var(--conn) / -2); top: 50%; border-top: 1px solid var(--line-2); }
+.m-lid { position: relative; width: 76px; display: flex; flex-direction: column; padding-left: 8px; background: var(--surface); }
+.m-lid b { font-weight: 500; font-size: 15px; }
+.m-lid span { color: var(--text-3); font-size: 12px; }
+.m-eqs { position: relative; display: flex; gap: var(--gg); }
+.m-grp { display: flex; gap: var(--gap); }
+.m-branch { position: relative; }
+.m-branch::before { content: ''; position: absolute; left: 50%; top: calc(var(--ch) / 2); bottom: calc(var(--ch) / 2); border-left: 1px solid var(--line-2); }
+.m-branch.half::before { top: 25%; bottom: 25%; }
+.m-in, .m-out { display: flex; align-items: center; position: relative; }
+.m-in::after, .m-out::before { content: ''; position: absolute; top: 50%; width: calc(var(--conn) / 2); border-top: 1px solid var(--line-2); }
+.m-in::after { right: calc(var(--conn) / -2); } .m-out::before { left: calc(var(--conn) / -2); }
+.m-paint { display: flex; flex-direction: column; justify-content: space-around; position: relative; }
+.m-paint .cell { position: relative; }
+.m-paint .cell::before, .m-paint .cell::after { content: ''; position: absolute; top: 50%; width: calc(var(--conn) / 2); border-top: 1px solid var(--line-2); }
+.m-paint .cell::before { left: calc(var(--conn) / -2 - 1px); } .m-paint .cell::after { right: calc(var(--conn) / -2 - 1px); }
+
+.cell { position: relative; width: var(--cw); height: var(--ch); padding: 8px 10px; border-radius: var(--r-md); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: background-color .15s ease; }
+.m-in .cell, .m-paint .cell, .m-out .cell { width: var(--side); }
+.c-top { display: flex; justify-content: space-between; gap: 4px; }
+.c-name { font-size: 12px; line-height: 1.2; }
+.c-row { display: flex; align-items: baseline; gap: 6px; }
+.c-code { font-size: 16px; font-weight: 600; line-height: 1; }
+.c-word { font-size: 12px; }
+.c-dur, .c-sub { margin-left: auto; font-size: 12px; }
+.c-num { font-size: 16px; font-weight: 600; line-height: 1; }
+.s-R { background: var(--r-bg); box-shadow: inset 0 0 0 1px var(--r-bd); color: var(--r-tx); }
+.s-R .c-name { color: var(--text-2); }
+.s-S { background: var(--s-bg); color: var(--s-tx); }
+.s-I { background: var(--i-bg); color: var(--i-tx); }
+.s-D { background: var(--d-bg); color: var(--d-tx); }
+.inb { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text); cursor: pointer; }
+.inb .c-name, .inb .c-word, .inb .c-sub { color: var(--text-2); }
+/* 예지보전: 칸 바깥 고리 + 글자. 고장 칸(꽉 찬 빨강)과 구분 */
+.pdm-warn { outline: 2px solid var(--warn); outline-offset: 3px; }
+.pdm-danger { outline: 2px dashed var(--danger); outline-offset: 3px; }
+.c-pdm { font-size: 11px; line-height: 1.2; white-space: nowrap; }
+.pdm-warn .c-pdm { color: var(--warn); } .pdm-danger .c-pdm { color: var(--danger); }
+.flowdot { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--dot); top: calc(50% - 3px); }
+
+/* 아래 3칸 */
+.kpis { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 16px; min-height: 0; }
+.kpis .panel { display: flex; flex-direction: column; }
+.figs { display: flex; gap: 32px; }
+.fig .l { color: var(--text-2); font-size: 13px; }
+.fig .v { font-size: 32px; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; }
+.fig .v small { font-size: 16px; color: var(--text-2); margin-left: 2px; }
+.fig.big .v { font-size: 48px; }
+.chart { flex: 1; min-height: 0; margin-top: 16px; }
+.ch-grid { stroke: var(--line); } .ch-lab { fill: var(--text-3); font-size: 11px; }
+.ch-target { stroke: var(--text-3); stroke-dasharray: 4 4; }
+.ch-actual { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; }
+.ch-dot { fill: var(--accent); } .ch-now { stroke: var(--line-2); }
+.bars { display: flex; flex-direction: column; gap: 16px; margin-top: auto; }
+.bar .h { display: flex; justify-content: space-between; color: var(--text-2); font-size: 13px; margin-bottom: 6px; }
+.bar .h b { color: var(--text); font-weight: 500; }
+.bar .t { height: 4px; border-radius: 2px; background: var(--surface-3); }
+.bar .t i { display: block; height: 100%; border-radius: 2px; background: var(--text-2); }
+.q { display: flex; gap: 20px; align-items: center; }
+.dn-ok { stroke: var(--surface-3); } .dn-ng { stroke: var(--d-bg); }
+.qlist { margin: auto 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+.qlist li { display: flex; justify-content: space-between; color: var(--text-2); font-size: 13px; border-top: 1px solid var(--line); padding-top: 8px; }
+.qlist li b { color: var(--text); font-weight: 500; }
+
+/* 알림 열 */
+.alerts { display: flex; flex-direction: column; }
+.alerts ul { list-style: none; margin: 0 -8px; padding: 0; overflow: auto; display: flex; flex-direction: column; gap: 2px; }
+.al { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: start; padding: 12px 8px; border-radius: var(--r-md); }
+.al.on { background: var(--surface-2); }
+.al.off .al-eq, .al.off .al-msg { color: var(--text-3); }
+.al.off .al-code { background: none; box-shadow: inset 0 0 0 1px var(--line-2); color: var(--text-3); }
+.al-code { height: 24px; border-radius: 6px; display: grid; place-items: center; font-size: 12px; font-weight: 600; }
+.al-code.s-R { box-shadow: none; }
+.al-code.pdm { box-shadow: inset 0 0 0 1.5px var(--danger); color: var(--danger); font-size: 11px; }
+.al-eq { font-weight: 500; }
+.al-msg { color: var(--text-2); font-size: 13px; }
+.al-meta { display: flex; flex-direction: column; align-items: flex-end; color: var(--text-3); font-size: 12px; }
+.al.on .al-dur { color: var(--text); font-size: 13px; }
+.al-btn { margin-top: 8px; height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface-3); font-size: 12px; cursor: pointer; }
+.al-sep { color: var(--text-3); font-size: 12px; padding: 12px 8px 4px; }
+
+/* 고장 토스트 */
+.toast { position: fixed; right: 40px; bottom: 40px; width: 368px; display: grid; grid-template-columns: 4px 1fr auto; gap: 14px; align-items: center; padding: 14px 16px 14px 0; background: var(--surface-3); border: 1px solid var(--line-2); border-radius: var(--r-md); box-shadow: 0 8px 24px rgba(0,0,0,.4); overflow: hidden; }
+.toast::before { content: ''; align-self: stretch; margin: -14px 0; background: var(--d-bg); }
+.toast b { font-weight: 500; } .toast p { margin: 0; color: var(--text-2); font-size: 13px; }
+.toast button { height: 32px; padding: 0 14px; border-radius: 8px; border: 0; background: var(--text); color: var(--bg); font-weight: 500; }
+</style>
+</head>
+<body>
+<aside class="side">
+  <div class="brand"><i></i>라인가동현황</div>
+  <nav class="nav">
+    <a class="on" href="#"><i data-lucide="layout-dashboard"></i>대시보드</a>
+    <a href="#"><i data-lucide="package"></i>생산</a>
+    <a href="#"><i data-lucide="gauge"></i>가동률</a>
+    <a href="#"><i data-lucide="activity"></i>예지보전</a>
+    <a href="#"><i data-lucide="history"></i>알람이력</a>
+    <a href="#"><i data-lucide="file-text"></i>리포트</a>
+    <a href="#"><i data-lucide="settings"></i>설정</a>
+  </nav>
+  <div class="me"><i data-lucide="circle-user"></i>김현수 <span style="margin-left:auto;color:var(--text-3);font-size:12px">로그아웃</span></div>
+</aside>
+
+<div class="main">
+  <header class="top">
+    <h1>대시보드</h1>
+    <span class="clock" id="clock"></span>
+    <button class="bell" aria-label="알림 5건"><i data-lucide="bell"></i><span>5</span></button>
+  </header>
+
+  <div class="content">
+    <div class="col">
+      <section class="panel">
+        <div class="ph"><h2>공장 배치도</h2><span class="meta">설비 39대 · 가동 34 · 정지 1 · 대기 2 · 고장 1</span>
+          <div class="r">
+            <div class="legend"><span><i style="background:var(--r-bd)"></i>R 가동</span><span><i style="background:var(--s-bg);box-shadow:inset 0 0 0 1px var(--line-2)"></i>S 정지</span><span><i style="background:var(--i-bg)"></i>I 대기</span><span><i style="background:var(--d-bg)"></i>D 고장</span><span><i style="outline:2px dashed var(--danger);outline-offset:1px;width:8px;height:8px"></i>예지 위험</span></div>
+            <div class="seg"><button class="on">2D</button><button>3D</button></div>
+          </div>
+        </div>
+        <div class="map" id="map"></div>
+      </section>
+      <div class="kpis">
+        <section class="panel">
+          <div class="ph"><h2>오늘 생산</h2><span class="meta">출고 양품 기준</span></div>
+          <div class="figs">
+            <div class="fig"><div class="l">목표</div><div class="v" id="pTarget"></div></div>
+            <div class="fig"><div class="l">실적</div><div class="v" id="pDone"></div></div>
+            <div class="fig"><div class="l">달성률</div><div class="v" id="pRate"></div></div>
+          </div>
+          <div class="chart" id="chart"></div>
+        </section>
+        <section class="panel">
+          <div class="ph"><h2>종합 가동률</h2><span class="meta">오늘</span></div>
+          <div class="fig big"><div class="l">OEE</div><div class="v" id="oee"></div></div>
+          <div class="bars" id="oeeBars"></div>
+        </section>
+        <section class="panel">
+          <div class="ph"><h2>품질</h2><span class="meta">오늘</span></div>
+          <div class="q"><div id="donut"></div>
+            <div class="fig"><div class="l">출고 불량률</div><div class="v" id="qRate"></div><div class="l" id="qSub"></div></div></div>
+          <ul class="qlist" id="qList"></ul>
+        </section>
+      </div>
+    </div>
+
+    <section class="panel alerts">
+      <div class="ph"><h2>알림</h2><span class="meta">오늘 9건 · 진행 중 5</span></div>
+      <ul id="alerts"></ul>
+    </section>
+  </div>
+</div>
+
+<div class="toast" role="status">
+  <div><b>L2 프레스 3단 · 장비고장(알람)</b><p>압력 상한 초과 · 14:20:12</p></div>
+  <button>보기</button>
+</div>
+
+<script src="data.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  document.getElementById('clock').innerHTML = `${NOW.date}<b>${NOW.time}</b>`
+  renderMap(document.getElementById('map'))
+  renderAlerts(document.getElementById('alerts'))
+  pTarget.textContent = fmt(PROD.target); pDone.textContent = fmt(PROD.done); pRate.innerHTML = `${PROD.rate}<small>%</small>`
+  chart.innerHTML = prodChart(chart)
+  oee.innerHTML = `${OEE.oee}<small>%</small>`
+  oeeBars.innerHTML = [['시간가동률', OEE.a], ['성능가동률', OEE.p], ['양품률', OEE.q]].map(([l, v]) => `<div class="bar"><div class="h">${l}<b>${v.toFixed(1)}%</b></div><div class="t"><i style="width:${v}%"></i></div></div>`).join('')
+  document.getElementById('donut').innerHTML = donut(112, 12)
+  qRate.innerHTML = `${QUALITY.rate}<small>%</small>`; qSub.textContent = `양품 ${fmt(QUALITY.ok)} · 불량 ${QUALITY.ng}`
+  qList.innerHTML = QUALITY.byProc.map(([p, n]) => `<li>${p} 불량<b>${n}</b></li>`).join('')
+  lucide.createIcons()
+</script>
+</body>
+</html>

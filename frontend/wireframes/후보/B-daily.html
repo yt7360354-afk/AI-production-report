@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시안 B · 일일 생산 리포트</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="b.css">
+<style>
+.daily { grid-template-rows: auto minmax(0, 1fr); }
+.head { display: flex; align-items: center; gap: var(--sp-6); }
+.head h1 { margin: 0; font-size: var(--fs-xl); font-weight: 600; }
+.date { height: 36px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: var(--r-md); background: var(--surface); display: flex; align-items: center; gap: var(--sp-2); }
+.date svg { width: 16px; height: 16px; stroke-width: 1.5; color: var(--text-3); }
+.head .note { margin-left: auto; color: var(--text-3); font-size: var(--fs-sm); }
+
+.kpi { display: grid; grid-template-columns: repeat(3, 1fr) 1.6fr; padding: 0; }
+.kpi > div { padding: 14px var(--sp-6); border-left: 1px solid var(--line); }
+.kpi > div:first-child { border-left: 0; }
+.kpi .st-v { font-size: var(--fs-2xl); }
+.row { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: var(--sp-4); min-height: 0; }
+.tbl tfoot td { font-weight: 600; border-bottom: 0; border-top: 1px solid var(--line-2); }
+.tbl tr.paint td { color: var(--text-2); }
+
+.hb { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: space-between; flex: 1; min-height: 0; }
+.hb li { display: grid; grid-template-columns: 150px minmax(0, 1fr) 72px 44px; align-items: center; gap: var(--sp-3); }
+.hb .lab { display: flex; align-items: center; gap: var(--sp-2); white-space: nowrap; }
+.hb .lab .code { min-width: 22px; height: 22px; font-size: var(--fs-xs); }
+.hb .t { height: 10px; background: var(--surface-3); border-radius: 2px; }
+.hb .t i { display: block; height: 100%; border-radius: 2px; }
+.hb .t i.S { background: var(--s-bg); } .hb .t i.I { background: var(--i-bg); } .hb .t i.D { background: var(--d-bg); }
+.hb .v { text-align: right; font-weight: 600; }
+.hb .c { text-align: right; color: var(--text-3); font-size: var(--fs-sm); }
+
+.wip { list-style: none; margin: 0; padding: 0; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.wip li { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; padding-bottom: var(--sp-2); border-bottom: 1px solid var(--line); }
+.wip li:last-child { border-bottom: 0; }
+.wip li span { display: flex; align-items: center; gap: 6px; color: var(--text-2); }
+.wip li svg { width: 14px; height: 14px; color: var(--text-3); }
+.wip li b { font-size: var(--fs-lg); font-weight: 600; }
+.wip li b small { font-size: var(--fs-sm); color: var(--text-3); font-weight: 400; margin-left: 2px; }
+@media (max-height: 860px) {
+  .kpi > div { padding: 10px var(--sp-5); } .kpi .st-v { font-size: var(--fs-xl); }
+  .daily .panel:not(.kpi) { padding: var(--sp-4) var(--sp-5); } .daily .ph { margin-bottom: var(--sp-2); }
+  .tbl td { padding: 4px var(--sp-3); line-height: 1.3; }
+}
+</style>
+</head>
+<body>
+<header class="top"></header>
+
+<main class="page daily">
+  <div class="head">
+    <h1>리포트</h1>
+    <div class="tabs"><a class="on" href="#">일일 생산 리포트</a><a href="B-report.html">계획수정 보고서</a></div>
+    <div class="date"><i data-lucide="calendar"></i>2026-11-15 (일)</div>
+    <span class="note">하루 마감 값 · 제품별 상세는 생산 조회에서</span>
+  </div>
+
+  <div class="withk">
+    <section class="panel kcol">
+      <div class="ph"><h2>하루 요약</h2><span class="meta">11-15 마감</span></div>
+      <div class="k lead"><div class="st-l">실적 · 출고 양품 / 목표</div><div class="st-v">1,174<small>/ 1,200</small></div>
+        <div class="kbar" role="img" aria-label="달성률 97.8%"><i style="width:97.8%"></i></div><div class="st-sub">달성률 97.8%</div></div>
+      <div class="k"><div class="st-l">OEE</div><div class="st-v">81.3<small>%</small></div>
+        <ul class="klist"><li>시간가동률<b>90.2</b></li><li>성능가동률<b>93.5</b></li><li>양품률<b>96.4</b></li></ul></div>
+      <div class="k"><div class="st-l">불량 제외 합계</div><div class="st-v">44</div><div class="st-sub">공정 검사 + 출고 비전</div></div>
+    </section>
+    <div class="kright" style="grid-template-rows: minmax(0, 1.45fr) minmax(0, 1fr)">
+    <div class="row">
+      <section class="panel">
+        <div class="ph"><h2>라인별 실적</h2></div>
+        <div class="fill scroll">
+          <table class="tbl">
+            <thead><tr><th>라인</th><th class="num">계획</th><th class="num">실적</th><th class="num">달성률</th><th class="num">OEE</th><th class="num">불량 제외</th></tr></thead>
+            <tbody id="lines"></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="ph"><h2>공정별 생산량 · 불량</h2><span class="meta">공정 검사 기준</span></div>
+        <div class="fill scroll">
+          <table class="tbl">
+            <thead><tr><th>공정</th><th class="num">생산</th><th class="num">불량</th><th class="num">불량률</th></tr></thead>
+            <tbody id="procs"></tbody>
+            <tfoot><tr><td>합계</td><td></td><td class="num">44</td><td></td></tr></tfoot>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <div class="row">
+      <section class="panel">
+        <div class="ph"><h2>비가동 코드별 시간 · 건수</h2><span class="meta">39대 합계 · 계획정지는 회색</span></div>
+        <ul class="hb" id="codes"></ul>
+      </section>
+      <section class="panel">
+        <div class="ph"><h2>재공품</h2><span class="meta">공정 사이 · 24:00 마감 시점</span></div>
+        <ul class="wip" id="wip"></ul>
+      </section>
+    </div>
+    </div>
+  </div>
+</main>
+
+<script src="data.js"></script>
+<script src="b.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  renderTop('리포트')
+  // 데모 값 (2026-11-15 하루)
+  const L = [['L1', 200, 198, 82.4, 7], ['L2', 200, 192, 80.1, 9], ['L3', 200, 197, 81.9, 7], ['L4', 200, 195, 79.8, 7], ['L5', 200, 196, 81.5, 8], ['L6', 200, 196, 82.0, 6]]
+  lines.innerHTML = L.map(([n, p, d, o, ng]) => `<tr><td>${n}</td><td class="num">${p}</td><td class="num">${d}</td><td class="num">${(d / p * 100).toFixed(1)}%</td><td class="num">${o.toFixed(1)}%</td><td class="num">${ng}</td></tr>`).join('')
+    + `<tr class="paint"><td>도장</td><td class="num">1,200</td><td class="num">1,185</td><td class="num">98.8%</td><td class="num">85.2%</td><td class="num">-</td></tr>`
+  const P = [['슬리팅', 1233, 6], ['프레스', 1219, 14], ['용접', 1201, 8], ['도장', 1190, 5], ['출고 (비전)', 1185, 11]]
+  procs.innerHTML = P.map(([n, a, b]) => `<tr><td>${n}</td><td class="num">${fmt(a)}</td><td class="num">${b}</td><td class="num">${(b / a * 100).toFixed(1)}%</td></tr>`).join('')
+
+  const C = [['S', '계획정지', 11400, 4], ['S', '계획정지(셋업)', 7530, 6], ['I', '재공부족', 4360, 5], ['I', '작업지연', 1100, 2], ['D', '장비고장', 2530, 1], ['D', '장비고장(알람)', 3305, 3], ['D', '안전문제', 360, 1]]
+  const hm = (s) => `${Math.floor(s / 3600)}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
+  codes.innerHTML = C.map(([s, n, sec, c]) => `<li><span class="lab"><span class="code s-${s}">${s}</span>${n}</span><div class="t"><i class="${s}" style="width:${sec / 11400 * 100}%"></i></div><span class="v">${hm(sec)}</span><span class="c">${c}건</span></li>`).join('')
+
+  const W = [['입고', '슬리팅', 31, '롤'], ['슬리팅', '프레스', 8], ['프레스', '용접', 4], ['용접', '도장', 3], ['도장', '출고', 0]]
+  wip.innerHTML = W.map(([a, b, n, u]) => `<li><span>${a}<i data-lucide="arrow-right"></i>${b}</span><b>${n}<small>${u || '개'}</small></b></li>`).join('')
+  lucide.createIcons()
+</script>
+</body>
+</html>

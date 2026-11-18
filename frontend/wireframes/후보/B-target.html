@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시안 B · 생산 목표 설정</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="b.css">
+<link rel="stylesheet" href="b-set.css">
+<style>
+/* 표가 화면 끝까지 늘어나 날짜와 숫자가 멀어지지 않게 폭을 내용에 맞춤 */
+.body { grid-template-columns: clamp(360px, 26vw, 440px) minmax(0, 960px); }
+.form { display: flex; flex-direction: column; gap: var(--sp-4); }
+.plan { padding: var(--sp-4); border-radius: var(--r-md); background: var(--surface-2); }
+.plan b { display: block; font-size: var(--fs-xl); font-weight: 600; margin-top: 2px; }
+.rules { margin: 0; padding-left: 18px; color: var(--text-3); font-size: var(--fs-sm); display: grid; gap: var(--sp-1); }
+.tbl td svg { width: 14px; height: 14px; color: var(--text-3); vertical-align: -2px; }
+.tbl tr.today td { background: var(--surface-2); font-weight: 600; }
+.tbl .unset { color: var(--warn-tx); font-weight: 600; }
+.tbl .act { text-align: right; }
+.tbl .act .btn { height: 30px; padding: 0 10px; font-size: var(--fs-sm); }
+</style>
+</head>
+<body>
+<header class="top"></header>
+
+<main class="page set">
+  <div class="head">
+    <h1>설정</h1>
+    <div class="tabs"><a class="on" href="#">생산 목표</a><a href="B-limit.html">관리값 기준</a></div>
+  </div>
+
+  <div class="body">
+    <section class="panel">
+      <div class="ph"><h2>하루 목표 입력</h2><span class="meta">공장 전체 · 하루 1건</span></div>
+      <div class="form">
+        <label class="field"><span>날짜</span><input class="input" type="text" value="2026-11-17 (화)"></label>
+        <label class="field"><span>목표 수량</span><span class="input unit"><input value="1,200" aria-label="목표 수량"><em>개</em></span></label>
+        <div class="plan"><div class="st-l">라인 계획 (자동)</div><b>1,200 ÷ 가동 라인 6 = 200개</b></div>
+        <button class="btn primary">저장</button>
+        <ul class="rules">
+          <li>오늘과 앞으로의 날짜만 입력할 수 있음. 지난 날짜는 잠김</li>
+          <li>같은 날짜에 다시 저장하면 덮어씀</li>
+          <li>저장하면 대시보드 달성률에 바로 반영</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="ph"><h2>최근 목표</h2></div>
+      <div class="fill scroll">
+        <table class="tbl">
+          <thead><tr><th>날짜</th><th class="num">목표</th><th class="num">라인 계획</th><th class="num">실적</th><th class="num">달성률</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="data.js"></script>
+<script src="b.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  renderTop('설정')
+  // 데모 값. 상태: f 앞으로, t 오늘, p 지난날
+  const R = [['2026-11-18 (수)', 1200, null, 'f'], ['2026-11-17 (화)', 1200, null, 'f'], ['2026-11-16 (월)', 1200, 742, 't'], ['2026-11-15 (일)', 1200, 1174, 'p'], ['2026-11-14 (토)', 1200, 1156, 'p'],
+             ['2026-11-13 (금)', 1100, 1092, 'p'], ['2026-11-12 (목)', 1100, 1031, 'p'], ['2026-11-11 (수)', null, 1088, 'p'], ['2026-11-10 (화)', 1100, 1079, 'p']]
+  rows.innerHTML = R.map(([d, g, done, k]) => `<tr class="${k === 't' ? 'today' : ''}">
+    <td>${d}${k === 't' ? ' · 오늘' : ''}</td>
+    <td class="num">${g ? fmt(g) : '<span class="unset">목표 미설정</span>'}</td>
+    <td class="num">${g ? Math.round(g / 6) : '-'}</td>
+    <td class="num">${done != null ? fmt(done) : '-'}</td>
+    <td class="num">${g && done != null ? (done / g * 100).toFixed(1) + '%' : '-'}${k === 't' ? ' <span class="note2">진행 중</span>' : ''}</td>
+    <td class="act">${k === 'p' ? '<i data-lucide="lock" aria-label="잠김"></i>' : '<button class="btn">수정</button>'}</td></tr>`).join('')
+  lucide.createIcons()
+</script>
+</body>
+</html>

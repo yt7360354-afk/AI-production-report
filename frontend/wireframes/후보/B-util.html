@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시안 B · 가동률</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="b.css">
+<style>
+.util { grid-template-rows: auto minmax(0, 1fr); }
+.head { display: flex; align-items: flex-end; gap: var(--sp-6); }
+.head h1 { margin: 0; font-size: var(--fs-xl); font-weight: 600; line-height: 32px; }
+.filters { display: flex; align-items: flex-end; gap: var(--sp-3); }
+.date { height: 36px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: var(--r-md); background: var(--surface); display: flex; align-items: center; gap: var(--sp-2); }
+.date svg { width: 16px; height: 16px; stroke-width: 1.5; color: var(--text-3); }
+.head .note { margin-left: auto; color: var(--text-3); font-size: var(--fs-sm); }
+
+/* OEE + 3요소 */
+.kpi { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; padding: 0; }
+.kpi > div { padding: var(--sp-4) var(--sp-6); border-left: 1px solid var(--line); }
+.kpi > div:first-child { border-left: 0; }
+.kpi .st-v { font-size: 44px; }
+.kpi > div:not(:first-child) .st-v { font-size: var(--fs-3xl); }
+.kpi .st-sub { margin-top: var(--sp-1); }
+.kpi .op { color: var(--text-3); font-size: var(--fs-xl); align-self: center; }
+
+.mid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); min-height: 0; }
+
+/* 가로 막대 목록 */
+.hb { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: space-between; flex: 1; min-height: 0; }
+.hb li { display: grid; grid-template-columns: 136px minmax(0, 1fr) 72px 52px; align-items: center; gap: var(--sp-3); min-height: 24px; }
+.hb li.click { cursor: pointer; border-radius: var(--r-sm); }
+.hb li.click:hover .lab { text-decoration: underline; }
+.hb .lab { display: flex; align-items: center; gap: var(--sp-2); white-space: nowrap; }
+.hb .lab .code { min-width: 22px; height: 22px; font-size: var(--fs-xs); }
+.hb .t { height: 12px; background: var(--surface-3); border-radius: 2px; }
+.hb .t i { display: block; height: 100%; border-radius: 2px; background: var(--text-2); }
+.hb .v { text-align: right; font-weight: 600; }
+.hb .c { text-align: right; color: var(--text-3); font-size: var(--fs-sm); }
+.hb li.low .t i { background: var(--text); }
+.hb li.low .lab::after { content: '가장 낮음'; color: var(--text-3); font-size: var(--fs-xs); }
+.hb li.zero { color: var(--text-3); }
+.hb .t i.S { background: var(--s-bg); } .hb .t i.I { background: var(--i-bg); } .hb .t i.D { background: var(--d-bg); }
+
+/* 상태 타임라인 */
+.tl { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.tl-rows { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: space-between; }
+.tl-row, .tl-axis { display: grid; grid-template-columns: 80px minmax(0, 1fr); align-items: center; gap: var(--sp-3); }
+.tl-row { min-height: 20px; }
+.tl-row b { font-weight: 600; }
+.tl-bar { position: relative; height: 18px; border-radius: 2px; background: var(--surface-3); overflow: hidden; }
+.tl-bar .past { position: absolute; inset: 0 auto 0 0; background: var(--r-bg); }
+.tl-bar .tl-seg { position: absolute; top: 0; bottom: 0; min-width: 3px; border: 0; border-radius: 0; }
+.tl-bar .now { position: absolute; top: -2px; bottom: -2px; border-left: 1.5px solid var(--text); }
+.tl-axis { margin-top: var(--sp-2); color: var(--text-3); font-size: var(--fs-2xs); }
+.tl-axis > div { position: relative; height: 14px; }
+.tl-axis span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.tl-axis span:first-child { transform: none; } .tl-axis span:last-child { transform: translateX(-100%); }
+@media (max-height: 860px) {
+  .kpi > div { padding: var(--sp-3) var(--sp-5); }
+  .kpi .st-v { font-size: var(--fs-3xl); } .kpi > div:not(:first-child) .st-v { font-size: var(--fs-2xl); }
+  .util .panel:not(.kpi) { padding: var(--sp-4) var(--sp-5); }
+  .util .ph { margin-bottom: var(--sp-2); }
+  .hb li { min-height: 18px; } .hb .t { height: 10px; }
+  .tl-row { min-height: 14px; } .tl-bar { height: 12px; }
+  .tl-axis { margin-top: var(--sp-1); }
+}
+</style>
+</head>
+<body>
+<header class="top"></header>
+
+<main class="page util">
+  <div class="head">
+    <h1>가동률</h1>
+    <div class="filters">
+      <div class="field"><span>기간</span><div class="seg"><button class="on">일</button><button>주</button><button>월</button></div></div>
+      <div class="field"><span>날짜</span><div class="date"><i data-lucide="calendar"></i>2026-11-16 (월)</div></div>
+      <label class="field"><span>라인</span><select class="select"><option>전체</option><option>L1</option><option>L2</option><option>L3</option><option>L4</option><option>L5</option><option>L6</option><option>도장</option></select></label>
+      <label class="field"><span>공정</span><select class="select"><option>전체</option></select></label>
+      <label class="field"><span>설비</span><select class="select"><option>전체</option></select></label>
+    </div>
+    <span class="note">00:00 ~ 14:32 기준 · 코일입고 제외</span>
+  </div>
+
+  <div class="withk">
+    <section class="panel kcol">
+      <div class="ph"><h2>종합 가동률</h2><span class="meta">00:00 ~ 14:32</span></div>
+      <div class="k lead"><div class="st-l">OEE</div><div class="st-v">78.4<small>%</small></div><div class="st-sub">시간가동률 × 성능가동률 × 양품률</div></div>
+      <div class="k"><div class="st-l">시간가동률</div><div class="st-v">89.1<small>%</small></div><div class="st-sub">(부하시간 − I·D 시간) ÷ 부하시간</div></div>
+      <div class="k"><div class="st-l">성능가동률</div><div class="st-v">92.0<small>%</small></div><div class="st-sub">표준CT × 생산수량 ÷ 가동시간</div></div>
+      <div class="k"><div class="st-l">양품률</div><div class="st-v">95.6<small>%</small></div><div class="st-sub">출고 양품 ÷ 슬리팅 투입</div></div>
+    </section>
+    <div class="kright" style="grid-template-rows: minmax(0, 1fr) minmax(0, 1fr)">
+    <div class="mid">
+      <section class="panel">
+        <div class="ph"><h2>라인별 OEE</h2><span class="meta">막대를 누르면 그 라인의 공정별로</span></div>
+        <ul class="hb" id="lineOee"></ul>
+      </section>
+      <section class="panel">
+        <div class="ph"><h2>비가동 코드별 시간 · 건수</h2><span class="meta">계획정지는 회색</span></div>
+        <ul class="hb" id="codes"></ul>
+      </section>
+    </div>
+
+    <section class="panel">
+      <div class="ph"><h2>상태 타임라인</h2><span class="meta">라인 대표 상태 (D &gt; I &gt; S &gt; R)</span>
+        <div class="r legend"><span><i class="s-R">R</i>가동</span><span><i class="s-S">S</i>정지</span><span><i class="s-I">I</i>대기</span><span><i class="s-D">D</i>고장</span><span><i style="background:var(--surface-3)"></i>아직 안 온 시간</span></div></div>
+      <div class="tl"><div class="tl-rows" id="tl"></div><div class="tl-axis"><div></div><div id="axis"></div></div></div>
+    </section>
+    </div>
+  </div>
+</main>
+
+<script src="data.js"></script>
+<script src="b.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  renderTop('가동률')
+  // 데모 값
+  const lines = [...LINES.map((l) => [l.id, l.oee]), ['도장', PAINT_LINE.oee], ['출고', 91.5]]
+  const low = Math.min(...lines.map((l) => l[1]))
+  lineOee.innerHTML = lines.map(([n, v]) => `<li class="click${v === low ? ' low' : ''}"><span class="lab">${n}</span><div class="t"><i style="width:${v}%"></i></div><span class="v">${v.toFixed(1)}%</span><span></span></li>`).join('')
+
+  const codeRows = [['D', '장비고장(알람)', 1836, 2], ['I', '재공부족', 1596, 3], ['S', '계획정지', 1500, 1], ['S', '계획정지(셋업)', 1328, 1], ['D', '안전문제', 372, 1], ['D', '장비고장', 0, 0], ['I', '작업지연', 0, 0]]
+  const mm = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+  codes.innerHTML = codeRows.map(([s, n, sec, c]) => `<li class="${c ? '' : 'zero'}"><span class="lab"><span class="code s-${s}">${s}</span>${n}</span><div class="t"><i class="${s}" style="width:${(sec / 1836) * 100}%"></i></div><span class="v">${sec ? mm(sec) : '-'}</span><span class="c">${c}건</span></li>`).join('')
+
+  const t = (hms) => { const [h, m, s] = hms.split(':').map(Number); return (h * 3600 + m * 60 + (s || 0)) / 864 } // → % of 24h
+  const NOWP = t('14:32:08')
+  const ev = { L1: [['I', '09:03:44', '09:07:49']], L2: [['D', '14:20:12']], L3: [['S', '06:31:20', '06:56:20']], L4: [['S', '14:10:00']], L5: [], L6: [['D', '11:42:19', '11:48:31']], 도장: [['D', '10:15:03', '10:33:43']], 출고: [] }
+  tl.innerHTML = Object.entries(ev).map(([n, list]) => `<div class="tl-row"><b>${n}</b><div class="tl-bar" title="${n}">
+    <i class="past" style="width:${NOWP}%"></i>
+    ${list.map(([s, a, b]) => `<i class="tl-seg s-${s}" style="left:${t(a)}%;width:${(b ? t(b) : NOWP) - t(a)}%" title="${STATUS[s]} ${a}~${b || '진행 중'}"></i>`).join('')}
+    <i class="now" style="left:${NOWP}%"></i></div></div>`).join('')
+  axis.innerHTML = [0, 3, 6, 9, 12, 15, 18, 21, 24].map((h) => `<span style="left:${h / 24 * 100}%">${String(h).padStart(2, '0')}시</span>`).join('')
+  lucide.createIcons()
+</script>
+</body>
+</html>

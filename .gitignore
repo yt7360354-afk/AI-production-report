@@ -1,0 +1,17 @@
+**/node_modules/
+**/dist/
+**/build/
+**/.gradle/
+**/.npm-cache/
+**/.npm-logs/
+**/.runtime/
+**/.tools/
+**/.claude/
+**/.impeccable/
+**/*.log
+.idea/
+.vscode/
+.DS_Store
+*.png
+*.docx
+

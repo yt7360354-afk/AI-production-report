@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시안 B · 알람·비가동 이력</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="b.css">
+<style>
+.alarm { grid-template-rows: auto auto minmax(0, 1fr); }
+.head { display: flex; align-items: center; gap: var(--sp-6); }
+.head h1 { margin: 0; font-size: var(--fs-xl); font-weight: 600; }
+.filters { display: flex; align-items: flex-end; gap: var(--sp-3); flex-wrap: wrap; }
+.date { height: 36px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: var(--r-md); background: var(--surface); display: flex; align-items: center; gap: var(--sp-2); }
+.date svg { width: 16px; height: 16px; stroke-width: 1.5; color: var(--text-3); }
+.chk { display: flex; gap: var(--sp-2); }
+.chk label, .only { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: var(--r-md); background: var(--surface); cursor: pointer; white-space: nowrap; }
+.chk input, .only input { margin: 0; accent-color: var(--text); }
+.chk .code { min-width: 22px; height: 22px; font-size: var(--fs-xs); }
+
+.tbl td { vertical-align: top; }
+.tbl td .code { min-width: 24px; height: 24px; font-size: var(--fs-xs); }
+.tbl .eqn { font-weight: 600; }
+.tbl .det { color: var(--text-2); }
+.tbl tr.live:not([class*="t-"]) td { background: var(--surface-2); }
+.live-tag { color: var(--text); font-weight: 600; }
+.sent { display: inline-flex; gap: var(--sp-3); color: var(--text-2); font-size: var(--fs-sm); }
+.sent span { display: inline-flex; align-items: center; gap: 2px; }
+.sent svg { width: 14px; height: 14px; stroke-width: 2; }
+.sent .fail { color: var(--danger); font-weight: 600; }
+.memo-cell { display: flex; gap: var(--sp-2); }
+.memo-cell input { flex: 1; min-width: 160px; height: 32px; padding: 0 8px; border: 1px solid var(--line-2); border-radius: var(--r-md); }
+.memo-cell .btn { height: 32px; padding: 0 10px; }
+.memo-text { display: flex; align-items: center; gap: var(--sp-2); }
+.memo-text button { border: 0; background: none; color: var(--text-3); cursor: pointer; padding: 2px; border-radius: var(--r-sm); }
+.memo-text button:hover { color: var(--text); background: var(--surface-3); }
+.memo-text svg { width: 14px; height: 14px; }
+.who { color: var(--text-2); } .who small { display: block; color: var(--text-3); font-size: var(--fs-xs); }
+.rep { height: 30px; padding: 0 10px; font-size: var(--fs-sm); display: inline-flex; align-items: center; text-decoration: none; color: var(--text); }
+.pager { display: flex; align-items: center; gap: var(--sp-2); margin-top: var(--sp-3); flex: none; }
+.pager .info { margin-right: auto; color: var(--text-3); font-size: var(--fs-sm); }
+.pager .btn { height: 32px; padding: 0 10px; }
+.pager .btn.on { background: var(--text); color: var(--surface); border-color: var(--text); }
+</style>
+</head>
+<body>
+<header class="top"></header>
+
+<main class="page alarm">
+  <div class="head">
+    <h1>알람·비가동 이력</h1>
+    <div class="tabs"><a class="on" href="#">알람·비가동</a><a href="#">예지보전 위험</a></div>
+  </div>
+
+  <div class="filters">
+    <div class="field"><span>기간 (최대 31일)</span><div class="date"><i data-lucide="calendar"></i>2026-11-16 ~ 2026-11-16</div></div>
+    <label class="field"><span>라인</span><select class="select"><option>전체</option><option>L1</option><option>L2</option><option>L3</option><option>L4</option><option>L5</option><option>L6</option><option>도장</option><option>출고</option></select></label>
+    <label class="field"><span>공정</span><select class="select"><option>전체</option></select></label>
+    <div class="field"><span>상태</span><div class="chk"><label><input type="checkbox" checked><span class="code s-D">D</span>고장</label><label><input type="checkbox" checked><span class="code s-I">I</span>대기</label><label><input type="checkbox"><span class="code s-S">S</span>정지</label></div></div>
+    <label class="field"><span>코드</span><select class="select"><option>전체</option><option>장비고장</option><option>장비고장(알람)</option><option>안전문제</option><option>재공부족</option><option>작업지연</option></select></label>
+    <label class="only"><input type="checkbox">진행 중만</label>
+  </div>
+
+  <section class="panel">
+    <div class="fill scroll">
+      <table class="tbl">
+        <thead><tr><th>발생</th><th>해제</th><th>라인</th><th>설비</th><th>상태 · 코드</th><th>상세</th><th class="num">지속</th><th>발송</th><th>조치 메모</th><th>조치 담당자</th><th>보고서</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="pager"><span class="info">6건 · 50건씩</span><button class="btn" disabled>이전</button><button class="btn on">1</button><button class="btn" disabled>다음</button></div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="b.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  renderTop('알람이력')
+  // 데모 값: 대시보드 알림 중 D·I, 발생 최근순. 메일·슬랙은 D만 보냄
+  const ok = (n) => `<span><i data-lucide="check"></i>${n}</span>`, ng = (n) => `<span class="fail"><i data-lucide="x"></i>${n} 실패</span>`
+  const data = [
+    ['14:21:05', '', 'L2', 'L2 용접', 'I', '재공부족', '앞 공정 정지', '11:03', '', null, ''],
+    ['14:20:40', '', 'L2', 'L2 프레스 4단', 'I', '재공부족', '앞 공정 정지', '11:28', '', null, ''],
+    ['14:20:12', '', 'L2', 'L2 프레스 3단', 'D', '장비고장(알람)', 'Pressure 1 상한 초과 (356 / 상한 350)', '11:56', ok('메일') + ok('슬랙'), 'input', 'view'],
+    ['11:42:19', '11:48:31', 'L6', 'L6 용접', 'D', '안전문제', '비상정지 (BX)', '6:12', ok('메일') + ng('슬랙'), ['안전 펜스 센서 점검 후 복귀', '이민재', '11:52'], 'make'],
+    ['10:15:03', '10:33:43', '도장', '도장 #2', 'D', '장비고장(알람)', '건조로 온도 상한 초과', '18:40', ok('메일') + ok('슬랙'), ['버너 출력 조정', '김현수', '10:40'], 'make'],
+    ['09:03:44', '09:07:49', 'L1', 'L1 슬리팅', 'I', '재공부족', '코일 공급 지연', '4:05', '', ['입고 대차 지연', '이민재', '09:15'], ''],
+  ]
+  rows.innerHTML = data.map(([a, b, l, eq, s, code, det, dur, sent, memo, rep]) => `<tr class="${b ? '' : 'live' + (s !== 'S' ? ' t-' + s : '')}">
+    <td>${a}</td><td>${b || '<span class="live-tag">진행 중</span>'}</td><td>${l}</td><td class="eqn">${eq}</td>
+    <td><span class="code s-${s}">${s}</span> ${code}</td><td class="det wrap">${det}</td><td class="num">${dur}</td>
+    <td>${sent ? `<span class="sent">${sent}</span>` : '-'}</td>
+    <td>${memo === 'input' ? '<div class="memo-cell"><input placeholder="조치 메모 (선택)" aria-label="조치 메모"><button class="btn primary">저장</button></div>'
+      : memo ? `<span class="memo-text">${memo[0]}<button aria-label="메모 고치기"><i data-lucide="pencil"></i></button></span>` : '-'}</td>
+    <td class="who">${memo && memo !== 'input' ? `${memo[1]}<small>${memo[2]} 저장</small>` : '-'}</td>
+    <td>${rep === 'view' ? '<a class="btn rep" href="B-report.html">보기</a>' : rep === 'make' ? '<a class="btn rep" href="B-report.html">만들기</a>' : ''}</td></tr>`).join('')
+  lucide.createIcons()
+</script>
+</body>
+</html>

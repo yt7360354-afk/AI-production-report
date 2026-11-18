@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시안 B · 코일입고 상세</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="b.css">
+<link rel="stylesheet" href="b-detail.css">
+<style>
+.inb-page { grid-template-rows: auto minmax(0, 1fr); }
+.sum { grid-template-columns: repeat(3, 1fr); }
+.body { grid-template-columns: clamp(320px, 22vw, 400px) minmax(0, 1fr); }
+.toggles { display: flex; gap: var(--sp-2); }
+.toggles label { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border: 1px solid var(--line-2); border-radius: var(--r-md); font-size: var(--fs-sm); cursor: pointer; }
+.toggles input { margin: 0; accent-color: var(--text); }
+.tbl td.q { font-weight: 600; }
+</style>
+</head>
+<body>
+<header class="top"></header>
+
+<main class="page detail inb-page">
+  <div class="head">
+    <nav class="crumb" aria-label="이동 경로"><a href="B.html">대시보드</a><i data-lucide="chevron-right"></i><b>코일입고</b></nav>
+    <span class="note2">설비 없음 · 입고 기록은 시뮬레이터가 만든 값</span>
+    <div class="hsum">
+      <div><div class="st-l">오늘 입고 코일</div><div class="st-v">24<small>개</small></div></div>
+      <div><div class="st-l">슬리팅 앞 재고 · 6개 라인 합</div><div class="st-v">37<small>롤</small></div></div>
+      <div><div class="st-l">오늘 투입 · 제품 ID 발급</div><div class="st-v">802</div></div>
+    </div>
+  </div>
+
+
+  <div class="body">
+    <section class="panel">
+      <div class="ph"><h2>오늘 입고 기록</h2><span class="meta">최근순</span></div>
+      <div class="fill scroll">
+        <table class="tbl">
+          <thead><tr><th>시각</th><th class="num">코일</th></tr></thead>
+          <tbody id="rec"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="ph"><h2>슬리팅 앞 재고 추이</h2><span class="meta">00시~지금 · 롤</span>
+        <div class="r">
+          <div class="chleg"><span><i></i>6개 라인 합</span><span><i class="thin"></i>고른 라인</span></div>
+          <div class="toggles"><label><input type="checkbox">L1</label><label><input type="checkbox" checked>L2</label><label><input type="checkbox">L3</label><label><input type="checkbox">L4</label><label><input type="checkbox">L5</label><label><input type="checkbox">L6</label></div>
+        </div>
+      </div>
+      <div class="fill" id="chart"></div>
+    </section>
+  </div>
+</main>
+
+<script src="data.js"></script>
+<script src="b.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  renderTop('대시보드')
+  // 데모 값: 2시간마다 3개씩 입고
+  const times = ['14:05:12', '12:02:40', '10:01:55', '08:03:10', '06:00:48', '04:02:31', '02:01:07', '00:03:22']
+  const qty = [3, 3, 3, 3, 3, 3, 3, 3]
+  rec.innerHTML = times.map((t, i) => `<tr><td>${t}</td><td class="num q">${qty[i]}</td></tr>`).join('')
+
+  // 합계: 입고 때 12롤 늘고, 슬리팅 6대가 시간당 6롤씩 씀. L2는 14:20 고장 뒤로 쓰지 않음
+  const tot = [], l2 = []
+  const inAt = times.map((t) => +t.slice(0, 2) + +t.slice(3, 5) / 60).reverse()
+  let s = 27.7, a = 4.6
+  for (let h = 0; h <= 14 + 32 / 60; h += 0.05) {
+    if (inAt.some((x) => h >= x && h - 0.05 < x)) { s += 12; a += 2 }
+    const l2run = h < 14 + 20 / 60
+    s -= 0.05 * (l2run ? 6 : 5); if (l2run) a -= 0.05
+    tot.push([h, s]); l2.push([h, a])
+  }
+  draw(chart, (el) => lineChart(el, { label: '슬리팅 앞 재고 추이', x0: 0, x1: 24, xTicks: [0, 6, 12, 18, 24].map((h) => [h, `${String(h).padStart(2, '0')}시`]), y0: 0, y1: 50, yTicks: [0, 10, 20, 30, 40, 50],
+    series: [{ pts: tot, cls: 'ch-actual' }, { pts: l2, cls: 'ch-thin' }], dot: true, now: 14 + 32 / 60 }))
+  lucide.createIcons()
+</script>
+</body>
+</html>

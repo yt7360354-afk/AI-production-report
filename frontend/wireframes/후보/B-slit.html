@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시안 B · 슬리팅 상세</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="b.css">
+<link rel="stylesheet" href="b-detail.css">
+</head>
+<body>
+<header class="top"></header>
+
+<main class="page detail">
+  <div class="head">
+    <nav class="crumb" aria-label="이동 경로"><a href="B.html">대시보드</a><i data-lucide="chevron-right"></i><a href="B-line.html">L1</a><i data-lucide="chevron-right"></i><b>슬리팅</b></nav>
+    <div class="tabs"><a class="on" href="#">슬리팅</a><a href="B-press.html">프레스</a><a href="B-weld.html">용접</a></div>
+    <div class="hsum">
+      <div><div class="st-l">설비 1대 상태</div><div class="rsid"><span><span class="code s-R">R</span>1</span><span class="zero"><span class="code s-S">S</span>0</span><span class="zero"><span class="code s-I">I</span>0</span><span class="zero"><span class="code s-D">D</span>0</span></div></div>
+      <div><div class="st-l">오늘 생산 · 양품</div><div class="st-v">140<small>/ 139</small></div><div class="st-sub">운전시간 × 속도로 환산한 값</div></div>
+      <div><div class="st-l">공정 OEE</div><div class="st-v">81.6<small>%</small></div></div>
+      <div><div class="st-l">재공 · 앞 / 뒤</div><div class="st-v">6<small>롤 / 3</small></div></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="left c2">
+
+      <div class="one">
+        <button class="eq on" aria-pressed="true">
+          <div class="band s-R"><b>R</b>가동<span class="dur">5:24:19</span></div>
+          <div class="info"><div class="nm">L1 슬리팅<span class="tag">실설비 · LS iG5A</span></div>
+            <span class="k">오늘 운전시간</span><span class="v">13:46:52</span>
+            <span class="k">출력 주파수</span><span class="v">59.92 Hz</span></div>
+        </button>
+        <section class="panel">
+          <div class="ph"><h2>인버터 상태</h2><span class="meta">실설비만 · 1초마다</span></div>
+          <dl class="kv">
+            <dt>운전 상태</dt><dd>정방향 운전</dd>
+            <dt>최근 트립</dt><dd>OCT 과전류<span class="sub">2026-11-14 16:02:11 · 3분 뒤 복귀</span></dd>
+            <dt>지령 / 출력</dt><dd>60.00 Hz / 59.92 Hz<span class="sub">RPM 1,797</span></dd>
+          </dl>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="ph"><h2>관리값</h2>
+          <div class="seg"><button class="on">출력 전류</button><button>출력 토크</button><button>DC Link 전압</button></div>
+          <div class="r"><div class="chleg"><span><i></i>측정값 (A)</span><span><i class="t"></i>상·하한 (기준 미정, 데모 값)</span></div><div class="seg"><button class="on">1시간</button><button>8시간</button><button>오늘</button></div></div>
+        </div>
+        <div class="fill" id="chart"></div>
+      </section>
+
+      <section class="panel">
+        <div class="ph"><h2>속도</h2><span class="meta">출력이 지령보다 낮은 구간 = 미세정지 후보</span>
+          <div class="r chleg"><span><i class="ref"></i>지령 주파수</span><span><i></i>출력 주파수</span><span><i class="gap"></i>미세정지 후보</span></div></div>
+        <div class="fill" id="speed"></div>
+      </section>
+    </div>
+
+    <div class="right">
+      <section class="panel">
+        <div class="ph"><h2>비가동 이력</h2><span class="meta">L1 슬리팅 · 오늘</span></div>
+        <ul class="hist fill scroll">
+          <li><span class="code s-I">I</span>
+            <div><div class="w">재공부족</div><div class="d">코일 공급 지연</div></div>
+            <div class="m">09:03:44 ~ 09:07:49<b>4:05</b></div>
+            <div class="memo-done">입고 대차 지연 · 이민재 09:15</div>
+          </li>
+          <li><span class="code s-S">S</span>
+            <div><div class="w">계획정지(셋업)</div><div class="d">코일 교체</div></div>
+            <div class="m">02:10:00 ~ 02:31:40<b>21:40</b></div>
+            <div class="memo-done">-</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <div class="ph"><h2>공정 검사</h2><span class="meta">슬리팅 끝 · 오늘</span></div>
+        <div class="qnum">
+          <div><div class="st-l">검사</div><div class="st-v">140</div></div>
+          <div><div class="st-l">불량</div><div class="st-v">1</div></div>
+          <div><div class="st-l">불량률</div><div class="st-v">0.7<small>%</small></div></div>
+        </div>
+        <div class="fill scroll">
+          <table class="tbl qtbl">
+            <thead><tr><th>시각</th><th>제품 ID · 사유</th></tr></thead>
+            <tbody>
+              <tr><td>10:41:22</td><td><a class="idlink" href="B-prod.html">L1-20261116-0081</a><div class="why">출력 전류 상한 이탈</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel micro">
+        <div><h2>미세정지</h2><div class="meta">오늘 · 속도 기준</div></div>
+        <div><div class="st-l">횟수</div><div class="st-v">6<small>회</small></div></div>
+        <div><div class="st-l">손실 시간</div><div class="st-v">0:52</div></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="data.js"></script>
+<script src="b.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  renderTop('대시보드')
+  // 데모 값: 13:32~14:32 (분 0~60)
+  const tk = [[0, '13:32'], [15, '13:47'], [30, '14:02'], [45, '14:17'], [60, '14:32']]
+  const r = rng(5), cur = []
+  for (let m = 0; m <= 60; m += 0.25) cur.push([m, 2.4 + (r() - 0.5) * 0.35])
+  draw(chart, (el) => lineChart(el, { label: 'L1 슬리팅 출력 전류 최근 1시간', x0: 0, x1: 60, xTicks: tk, y0: 0, y1: 4.5, yTicks: [0, 1, 2, 3, 4],
+    series: [{ pts: cur, cls: 'ch-actual' }], lines: [{ v: 4.0, cls: 'ch-limit', lab: '상한 4.0' }, { v: 0.5, cls: 'ch-limit', lab: '하한 0.5' }], dot: true }))
+
+  const gaps = [[11, 12.5], [27.5, 28.5], [46, 48]], out = []
+  const r2 = rng(9)
+  for (let m = 0; m <= 60; m += 0.25) {
+    const g = gaps.find(([a, b]) => m >= a && m <= b)
+    out.push([m, g ? 53.5 + r2() * 2 : 59.92 + (r2() - 0.5) * 0.12])
+  }
+  draw(speed, (el) => lineChart(el, { label: '지령 주파수와 출력 주파수 최근 1시간', x0: 0, x1: 60, xTicks: tk, y0: 50, y1: 62, yTicks: [50, 54, 58, 62],
+    series: [{ pts: out, cls: 'ch-actual' }, { pts: [[0, 60], [60, 60]], cls: 'ch-ref' }], bands: gaps }))
+  lucide.createIcons()
+</script>
+</body>
+</html>

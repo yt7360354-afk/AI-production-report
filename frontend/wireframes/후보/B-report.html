@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>시안 B · 계획수정 보고서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="b.css">
+<style>
+.rep { grid-template-rows: auto minmax(0, 1fr); }
+.head { display: flex; align-items: center; gap: var(--sp-6); }
+.head h1 { margin: 0; font-size: var(--fs-xl); font-weight: 600; }
+.body { display: grid; grid-template-columns: clamp(300px, 22vw, 380px) minmax(0, 1fr); gap: var(--sp-4); min-height: 0; }
+
+/* 목록 */
+.list { list-style: none; margin: 0 calc(var(--sp-5) * -1); padding: 0; overflow: auto; }
+.list .d { padding: var(--sp-3) var(--sp-5) var(--sp-1); color: var(--text-3); font-size: var(--fs-xs); }
+.list a { display: grid; grid-template-columns: 1fr auto; gap: 2px var(--sp-3); padding: var(--sp-3) var(--sp-5); text-decoration: none; border-left: 2px solid transparent; }
+.list a:hover { background: var(--surface-2); }
+.list a.on { background: var(--surface-2); border-left-color: var(--text); }
+.list a b { font-weight: 600; }
+.list a span { color: var(--text-2); font-size: var(--fs-sm); }
+.list a time { color: var(--text-3); font-size: var(--fs-sm); }
+
+/* 보고서 */
+.doc { overflow: auto; padding: var(--sp-4); background: #e4e6e9; }
+.doc-head { display: flex; align-items: flex-start; gap: var(--sp-4); padding-bottom: var(--sp-4); border-bottom: 1px solid var(--line-2); }
+.doc-head h2 { margin: 0; font-size: var(--fs-xl); font-weight: 600; }
+.doc-head p { margin: 4px 0 0; color: var(--text-3); font-size: var(--fs-sm); }
+.doc-head .btn { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
+.doc-head .btn + .btn { margin-left: 0; }
+.btn.primary { background: var(--text); color: var(--surface); border-color: var(--text); }
+.btn.primary:disabled { opacity: .55; cursor: wait; }
+.ai-state { color: var(--text-3); font-size: var(--fs-xs); margin-left: auto; }
+.doc-head .btn svg { width: 16px; height: 16px; }
+.report-paper { box-sizing: border-box; flex: none; width: 794px; height: 1123px; margin: var(--sp-4) auto 0; padding: 16px 21px; overflow: hidden; background: #fff; color: #000; border: 1px solid #cfd2d6; box-shadow: 0 3px 14px rgba(0,0,0,.09); font-family: "Malgun Gothic", "맑은 고딕", sans-serif; font-size: 12px; line-height: 1.35; }
+.report-paper * { color: #000 !important; }
+.formal-head { height: 165px; box-sizing: border-box; text-align: left; padding: 0; border: 0; }
+.formal-head h1 { margin: 0; text-align: center; font-size: 24px; line-height: 1.45; letter-spacing: 0; }
+.formal-head .document-class { margin: 0 0 5px; text-align: center; font-size: 12px; line-height: 1.25; letter-spacing: 0; font-weight: 400; }
+.doc-info { width: 100%; margin: 0; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+.doc-info th, .doc-info td { height: 27px; box-sizing: border-box; padding: 2px 4px; border: 1px solid #000; text-align: left; vertical-align: middle; line-height: 1.2; }
+.doc-info th { width: 70px; background: #eee; text-align: center; font-size: 13px; font-weight: 700; }
+.summary-grid { display: table; width: 100%; table-layout: fixed; margin: 0; border: 1px solid #000; border-top: 0; }
+.summary-item { display: table-cell; width: 25%; height: 42px; box-sizing: border-box; padding: 4px; border-left: 1px solid #000; vertical-align: middle; }
+.summary-item:first-child { border-left: 0; }
+.summary-item span { display: block; margin: 0; font-size: 12px; font-weight: 700; }
+.summary-item b { font-size: 12px; line-height: 1.2; font-weight: 400; }
+.summary-item small { margin-left: 2px; font-size: 12px; font-weight: 400; }
+.doc section { display: block; box-sizing: border-box; margin: 7px 0 0; padding: 0 0 8px; border: 0; page-break-inside: avoid; }
+.doc section:nth-of-type(1) { height: 120px; }
+.doc section:nth-of-type(2) { height: 108px; }
+.doc section:nth-of-type(3) { height: 220px; }
+.doc section:nth-of-type(4) { height: 98px; }
+.doc section:nth-of-type(5) { height: 116px; }
+.doc section:nth-of-type(6) { height: 116px; }
+.doc h3 { display: block; width: auto; margin: 0 0 6px; padding: 3px 4px; font-size: 12px; line-height: 1.35; font-weight: 700; background: #eee; border-left: 3px solid #000; }
+.doc section > div, .doc section > ol, .doc section > ul { width: auto; margin-top: 0; }
+.doc p { margin: 0 0 5px; max-width: none; font-size: 12px; line-height: 1.35; }
+.facts { display: block; margin: 2px 0 0; }
+.facts dt, .facts dd { display: inline-block; margin: 0 6px 0 0; font-size: 12px; } .facts dd { font-weight: 400; }
+.calc { display: block; margin: 0; white-space: nowrap; }
+.calc > div { display: inline-block; width: 46%; vertical-align: top; }
+.calc .st-v { font-size: 12px; line-height: 1.35; }
+.st-l, .st-sub { font-size: 12px; }
+.tbl { max-width: none; margin-top: 2px; }
+.report-paper .tbl th, .report-paper .tbl td { position: static; height: 24px; padding: 2px 4px; border: 1px solid #000; background: #fff; font-size: 12px; line-height: 1.2; }
+.report-paper .tbl th { background: #eee; font-weight: 600; }
+.tbl tfoot td { font-weight: 600; border-bottom: 0; border-top: 1px solid var(--line-2); }
+.tbl td.add { font-weight: 600; }
+.result { display: flex; align-items: center; gap: var(--sp-3); }
+.result .grade { height: 28px; }
+.note2 { color: var(--text-3); font-size: var(--fs-xs); margin-top: var(--sp-2); }
+.report-list { margin: 0; padding-left: 16px; }
+.report-list li { margin: 0 0 1px; }
+.result { margin: 0; gap: 6px; }
+.approval { height: 63px; box-sizing: border-box; margin-top: 8px; padding-top: 0; }
+.approval table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.approval th, .approval td { height: 22px; padding: 2px 4px; border: 1px solid #000; text-align: center; font-size: 10px; }
+.approval th { background: #eee; }
+.approval td { height: 30px; }
+.report-paper .note2 { height: auto; margin: 5px 0 0; padding: 0; font-size: 10px; }
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body { display: block; min-width: 0; height: auto; background: #fff; }
+  .top, .head, .body > .panel:first-child, .doc-head { display: none !important; }
+  .page, .body, .doc { display: block; padding: 0; border: 0; background: #fff; overflow: visible; }
+  .report-paper { width: 100%; margin: 0; padding: 0; border: 0; box-shadow: none; }
+}
+@media (max-height: 860px) {
+  .doc { padding: var(--sp-4); }
+}
+</style>
+</head>
+<body>
+<header class="top"></header>
+
+<main class="page rep">
+  <div class="head">
+    <h1>리포트</h1>
+    <div class="tabs"><a href="B-daily.html">일일 생산 리포트</a><a class="on" href="#">계획수정 보고서</a></div>
+  </div>
+
+  <div class="body">
+    <section class="panel">
+      <div class="ph"><h2>보고서 목록</h2><span class="meta">날짜별</span></div>
+      <div class="list" id="reportList">
+        <div class="d">2026-11-16 (월)</div>
+        <a class="on" href="#"><b>L2 프레스 3단</b><time>14:24:31</time><span>장비고장(알람)</span></a>
+        <div class="d">2026-11-14 (토)</div>
+        <a href="#"><b>L4 프레스 2단</b><time>16:40:05</time><span>장비고장</span></a>
+        <div class="d">2026-11-12 (목)</div>
+        <a href="#"><b>도장 #1</b><time>09:12:44</time><span>장비고장(알람)</span></a>
+        <a href="#"><b>L6 슬리팅</b><time>03:05:18</time><span>안전문제</span></a>
+      </div>
+    </section>
+
+    <section class="panel doc">
+      <div class="doc-head">
+        <div><h2 id="reportTitle">계획수정 보고서 · L2 프레스 3단</h2><p id="reportMeta">현재 공정·설비 조건을 기준으로 작성된 의사결정 지원 보고서</p></div>
+        <button class="btn primary" id="generateBtn"><i data-lucide="sparkles"></i>AI 보고서 생성</button>
+        <button class="btn" id="docBtn"><i data-lucide="file-text"></i>Google Docs(.doc)</button>
+        <button class="btn" id="pdfBtn"><i data-lucide="download"></i>PDF 다운로드</button>
+      </div>
+
+      <article class="report-paper" id="reportDocument">
+      <header class="formal-head">
+        <h1>생산계획 수정 검토 보고서</h1>
+        <p class="document-class">PRODUCTION PLAN REVISION REPORT</p>
+        <table class="doc-info">
+          <tr><th>문서번호</th><td id="documentNo">AI-RPT-20261116-001</td><th>작성일시</th><td id="generatedAt">2026-11-16 14:24:31</td></tr>
+          <tr><th>대상 라인</th><td>L2</td><th>작성 구분</th><td id="modelName">AI 분석 초안</td></tr>
+          <tr><th>작성자</th><td>김현수</td><th>문서 상태</th><td>검토 대기</td></tr>
+        </table>
+        <div class="summary-grid">
+          <div class="summary-item"><span>생산 계획</span><b>200<small>개</small></b></div>
+          <div class="summary-item"><span>현재 실적</span><b>108<small>개</small></b></div>
+          <div class="summary-item"><span>예상 부족</span><b id="summaryShortage">92<small>개</small></b></div>
+          <div class="summary-item"><span>정지 지속</span><b>11:56</b></div>
+        </div>
+      </header>
+
+      <section>
+        <h3>1. 발생 현황</h3>
+        <div>
+          <p id="incidentText">L2 프레스 3단이 14:20:12에 장비고장(알람)으로 멈췄습니다. 라인 안 설비는 한 줄로 이어져 있어 L2 전체가 멈춘 것으로 보고 계산했습니다.</p>
+          <dl class="facts"><dt>라인</dt><dt>설비</dt><dt>발생</dt><dt>원인</dt><dd>L2</dd><dd>L2 프레스 3단</dd><dd>14:20:12</dd><dd>Pressure 1 상한 초과 (356 / 상한 350)</dd></dl>
+        </div>
+      </section>
+
+      <section>
+        <h3>2. 생산 영향</h3>
+        <div>
+          <p>L2가 자정까지 만들 예정이던 라인 계획이 부족 수량입니다.</p>
+          <div class="calc">
+            <div><div class="st-l">남은 시간</div><div class="st-v">9:35:29</div><div class="st-sub">14:24:31 ~ 24:00</div></div>
+            <div><div class="st-l">L2 남은 라인 계획</div><div class="st-v"><span id="shortageQty">92</span><small>개</small></div><div class="st-sub">라인 계획 200 − 실적 108</div></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3>3. 생산 재배정안</h3>
+        <div>
+          <p id="allocationText">정상 라인 5개의 남은 능력 비율대로 92개를 나눴습니다. 남은 능력 = 남은 시간 ÷ 라인 CT 120초 − 남은 라인 계획.</p>
+          <table class="tbl">
+            <thead><tr><th>라인</th><th class="num">남은 라인 계획</th><th class="num">남은 능력</th><th class="num">비율</th><th class="num">추가 배정</th></tr></thead>
+            <tbody id="alloc"></tbody>
+            <tfoot><tr><td>합계</td><td class="num">366</td><td class="num" id="totalCapacity">1,069</td><td class="num">100%</td><td class="num" id="totalAllocation">92</td></tr></tfoot>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h3>4. 종합 검토</h3>
+        <div class="result"><span class="grade ok" id="resultGrade">목표 달성 가능</span><p id="resultText">남은 능력 합 1,069개가 부족 수량 92개보다 많아 오늘 목표 1,200개를 맞출 수 있을 것으로 예상합니다.</p></div>
+      </section>
+
+      <section>
+        <h3>5. 권장 조치</h3>
+        <ol class="report-list" id="actionList"><li>정지 설비의 안전 상태와 압력 상한 초과 원인을 확인합니다.</li><li>재배정 대상 라인의 자재와 작업자 준비 상태를 확인합니다.</li></ol>
+      </section>
+
+      <section>
+        <h3>6. 위험 및 확인사항</h3>
+        <ul class="report-list" id="riskList"><li>실제 복구시간에 따라 부족 수량을 다시 계산해야 합니다.</li><li>본 보고서는 생산계획을 자동 변경하지 않습니다.</li></ul>
+      </section>
+
+      <div class="approval">
+        <table><thead><tr><th>작성</th><th>생산관리 검토</th><th>품질 검토</th><th>최종 승인</th></tr></thead><tbody><tr><td>김현수</td><td></td><td></td><td></td></tr></tbody></table>
+      </div>
+      <p class="note2">※ 본 문서는 AI 기반 의사결정 지원 초안이며, 담당자 검토 및 승인 후 생산계획에 반영합니다.</p>
+      </article>
+    </section>
+  </div>
+</main>
+
+<script src="data.js"></script>
+<script src="b.js"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+  renderTop('리포트')
+  // 데모 값: 남은 시간 34,529초 ÷ 120 = 287개
+  const A = [['L1', 69, 218, 19], ['L3', 73, 214, 18], ['L4', 81, 206, 18], ['L5', 70, 217, 19], ['L6', 73, 214, 18]]
+  alloc.innerHTML = A.map(([l, rp, cap, add]) => `<tr><td>${l}</td><td class="num">${rp}</td><td class="num">${cap}</td><td class="num">${(cap / 1069 * 100).toFixed(1)}%</td><td class="num add">+${add}</td></tr>`).join('')
+  const conditions = A.map(([lineId, currentPlan, availableCapacity]) => ({ lineId, status: 'RUNNING', availableCapacity, currentPlan, constraint: '동일 제품 생산 가능' }))
+
+  generateBtn.addEventListener('click', async () => {
+    generateBtn.disabled = true
+    generateBtn.innerHTML = '<i data-lucide="loader-circle"></i>작성 중…'
+    lucide.createIcons()
+    try {
+      const res = await fetch('/api/v1/ai-reports/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lineId: 'L2', equipmentId: 'L2-PR3', equipmentName: 'L2 프레스 3단',
+          faultReason: 'Pressure 1 상한 초과 (356 / 상한 350)', faultStartedAt: '2026-11-16T14:20:12',
+          targetQty: 200, completedQty: 108, dueQty: 200, dueAt: '2026-11-16 24:00',
+          lineConditions: conditions, operatorNote: '품질 확인 후 재가동 필요'
+        })
+      })
+      if (!res.ok) throw new Error(`서버 오류 ${res.status}`)
+      const report = await res.json()
+      const assigned = report.allocations.reduce((sum, x) => sum + x.quantity, 0)
+      const capacity = conditions.reduce((sum, x) => sum + x.availableCapacity, 0)
+      const conditionByLine = Object.fromEntries(conditions.map(x => [x.lineId, x]))
+      reportTitle.textContent = `계획수정 보고서 · ${report.title}`
+      reportMeta.textContent = `${new Date(report.generatedAt).toLocaleString('ko-KR')} 생성 · AI 초안 · 제안만 하며 목표와 설비 계획은 바꾸지 않음`
+      documentNo.textContent = `AI-RPT-${new Date(report.generatedAt).toISOString().slice(0,10).replaceAll('-', '')}-${report.reportId.slice(0, 6).toUpperCase()}`
+      generatedAt.textContent = new Date(report.generatedAt).toLocaleString('ko-KR')
+      modelName.textContent = report.mock ? 'AI 분석 초안(데모)' : `AI 분석 초안(${report.model})`
+      incidentText.textContent = report.summary
+      shortageQty.textContent = String(200 - 108)
+      summaryShortage.innerHTML = `${200 - 108}<small>개</small>`
+      allocationText.textContent = report.actions.join(' ')
+      alloc.innerHTML = report.allocations.map(x => {
+        const c = conditionByLine[x.lineId]
+        return `<tr><td>${x.lineId}</td><td class="num">${c.currentPlan}</td><td class="num">${c.availableCapacity}</td><td class="num">${(c.availableCapacity / capacity * 100).toFixed(1)}%</td><td class="num add">+${x.quantity}</td></tr>`
+      }).join('')
+      totalCapacity.textContent = capacity.toLocaleString('ko-KR')
+      totalAllocation.textContent = assigned.toLocaleString('ko-KR')
+      resultGrade.textContent = assigned >= 92 ? '목표 달성 가능' : '추가 조정 필요'
+      resultGrade.className = `grade ${assigned >= 92 ? 'ok' : 'danger'}`
+      resultText.textContent = `${report.summary} ${report.risks.join(' ')}`
+      actionList.innerHTML = report.actions.map(x => `<li>${x}</li>`).join('')
+      riskList.innerHTML = report.risks.map(x => `<li>${x}</li>`).join('') + '<li>담당자 승인 전에는 생산계획과 설비 설정을 변경하지 않습니다.</li>'
+      const history = document.createElement('a')
+      history.href = '#'
+      history.className = 'on'
+      history.innerHTML = `<b>L2 프레스 3단</b><time>${new Date(report.generatedAt).toLocaleTimeString('ko-KR', { hour12: false })}</time><span>AI 계획수정 보고서</span>`
+      reportList.querySelectorAll('a').forEach(x => x.classList.remove('on'))
+      reportList.insertBefore(history, reportList.children[1])
+      generateBtn.innerHTML = '<i data-lucide="check"></i>생성 완료'
+    } catch (error) {
+      generateBtn.innerHTML = '<i data-lucide="triangle-alert"></i>생성 실패'
+      resultText.textContent = `${error.message}. 백엔드 서버 상태를 확인해 주세요.`
+    } finally {
+      generateBtn.disabled = false
+      lucide.createIcons()
+    }
+  })
+
+  docBtn.addEventListener('click', async () => {
+    docBtn.disabled = true
+    try {
+      const response = await fetch('/templates/production-plan-report-template.doc')
+      if (!response.ok) throw new Error(`템플릿을 불러오지 못했습니다 (${response.status})`)
+      const sourceBytes = await response.arrayBuffer()
+      let template = new TextDecoder('utf-16le').decode(sourceBytes)
+      const values = [
+        documentNo.textContent,
+        generatedAt.textContent,
+        'L2',
+        '200개',
+        '108개',
+        `${shortageQty.textContent}개`,
+        '11분 56초',
+        'L2',
+        'L2 프레스 3단',
+        '14:20:12',
+        'Pressure 1 상한 초과 (356 / 상한 350)',
+        '9시간 35분 29초',
+        `${shortageQty.textContent}개`,
+        '200개',
+        '108개'
+      ]
+      const escapeValue = value => String(value)
+        .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+      values.forEach(value => { template = template.replace('빈칸', escapeValue(value)) })
+      if (template.includes('빈칸')) throw new Error('템플릿 값 치환이 완료되지 않았습니다')
+
+      const outputBytes = new Uint8Array(2 + template.length * 2)
+      outputBytes[0] = 0xff
+      outputBytes[1] = 0xfe
+      const outputView = new DataView(outputBytes.buffer)
+      for (let i = 0; i < template.length; i += 1) outputView.setUint16(2 + i * 2, template.charCodeAt(i), true)
+      const blob = new Blob([outputBytes], { type: 'application/msword;charset=utf-16le' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = `생산계획_수정_보고서_${documentNo.textContent}.doc`
+      link.click()
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000)
+    } catch (error) {
+      alert(error.message)
+    } finally {
+      docBtn.disabled = false
+    }
+  })
+
+  pdfBtn.addEventListener('click', () => window.print())
+  lucide.createIcons()
+</script>
+</body>
+</html>
