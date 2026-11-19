@@ -13,10 +13,15 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AiReportService {
+    private static final Pattern LINE_PATTERN = Pattern.compile("(?i)L\\s*(\\d+)");
     private static final String SYSTEM_PROMPT = """
             당신은 제조 현장의 생산계획 조정 보고서를 작성하는 전문가다.
             제공된 JSON 사실만 사용하고 값을 추측하지 않는다.
@@ -37,37 +42,118 @@ public class AiReportService {
     }
 
     public AiReportResponse generate(AiReportRequest request) {
-        int shortage = Math.max(0, Math.max(request.targetQty(), request.dueQty()) - request.completedQty());
-        List<AiReportResponse.Allocation> allocations = allocate(shortage, request.lineId(), request.lineConditions());
+        int baseShortage = Math.max(0, Math.max(request.targetQty(), request.dueQty()) - request.completedQty());
+        AiReportResponse.RequestInterpretation interpretation = interpretAdditionalRequest(request.additionalRequest());
+        List<String> requestedStoppedLines = interpretation.stoppedLines();
+        int stoppedPlanQty = request.lineConditions().stream()
+                .filter(line -> !line.lineId().equalsIgnoreCase(request.lineId()))
+                .filter(line -> requestedStoppedLines.contains(line.lineId().toUpperCase()))
+                .mapToInt(AiReportRequest.LineCondition::currentPlan)
+                .sum();
+        int shortage = baseShortage + stoppedPlanQty;
+        if (stoppedPlanQty > 0) {
+            List<String> appliedRules = new ArrayList<>(interpretation.appliedRules());
+            appliedRules.add("추가 정지 라인의 남은 계획 " + stoppedPlanQty + "개를 재배정 수량에 포함");
+            interpretation = new AiReportResponse.RequestInterpretation(
+                    interpretation.excludedLines(), interpretation.stoppedLines(), interpretation.priority(), appliedRules);
+        }
+        List<AiReportResponse.Allocation> allocations = allocate(
+                shortage, request.lineId(), request.lineConditions(), new LinkedHashSet<>(interpretation.excludedLines()));
         Draft draft = properties.mock() ? mockDraft(request, shortage, allocations) : callLlm(request, shortage, allocations);
 
         return new AiReportResponse(
-                UUID.randomUUID().toString(), LocalDateTime.now(),
+                UUID.randomUUID().toString(), request.downtimeId(), LocalDateTime.now(),
                 properties.mock() ? "mock-template" : properties.model(), properties.mock(),
-                draft.title(), draft.summary(), draft.actions(), allocations, draft.risks(), draft.markdown());
+                shortage, draft.title(), draft.summary(), draft.actions(), allocations, draft.risks(), draft.markdown(), interpretation);
+    }
+
+    private AiReportResponse.RequestInterpretation interpretAdditionalRequest(String request) {
+        if (request == null || request.isBlank()) {
+            return new AiReportResponse.RequestInterpretation(
+                    List.of(), List.of(), "BALANCED", List.of("기본 잔여 생산능력 기준 적용"));
+        }
+
+        Set<String> excludedLines = new LinkedHashSet<>();
+        Set<String> stoppedLines = new LinkedHashSet<>();
+        String normalized = request.replaceAll("\\s+", " ").trim();
+        Matcher matcher = LINE_PATTERN.matcher(normalized);
+        while (matcher.find()) {
+            String lineId = "L" + matcher.group(1);
+            int start = Math.max(0, matcher.start() - 40);
+            int end = Math.min(normalized.length(), matcher.end() + 80);
+            String context = normalized.substring(start, end);
+            if (context.matches(".*(제외|빼|배정하지|사용하지|금지).*")) excludedLines.add(lineId);
+            if (context.matches(".*(정지|중단|멈춰|멈춤|세워).*")) {
+                stoppedLines.add(lineId);
+                excludedLines.add(lineId);
+            }
+        }
+
+        String priority = normalized.matches(".*(안전|품질).*우선.*") ? "SAFETY"
+                : normalized.matches(".*(납기|긴급|마감).*우선.*") ? "DUE_DATE" : "BALANCED";
+        List<String> rules = new ArrayList<>();
+        stoppedLines.forEach(line -> rules.add(line + " 요청 정지 및 재배정 제외"));
+        excludedLines.stream().filter(line -> !stoppedLines.contains(line))
+                .forEach(line -> rules.add(line + " 재배정 제외"));
+        if ("SAFETY".equals(priority)) rules.add("안전·품질 우선 검토");
+        else if ("DUE_DATE".equals(priority)) rules.add("납기 준수 우선 검토");
+        else rules.add("잔여 생산능력 기준 적용");
+        return new AiReportResponse.RequestInterpretation(
+                List.copyOf(excludedLines), List.copyOf(stoppedLines), priority, rules);
     }
 
     private List<AiReportResponse.Allocation> allocate(
-            int shortage, String stoppedLine, List<AiReportRequest.LineCondition> conditions) {
+            int shortage, String stoppedLine, List<AiReportRequest.LineCondition> conditions, Set<String> excludedLines) {
         List<AiReportRequest.LineCondition> candidates = conditions.stream()
                 .filter(line -> !line.lineId().equals(stoppedLine))
+                .filter(line -> !excludedLines.contains(line.lineId().toUpperCase()))
                 .filter(line -> "RUNNING".equalsIgnoreCase(line.status()))
                 .filter(line -> line.availableCapacity() > 0)
-                .sorted(Comparator.comparingInt(AiReportRequest.LineCondition::availableCapacity).reversed())
+                .sorted(Comparator.comparing(AiReportRequest.LineCondition::lineId))
                 .toList();
 
-        int remaining = shortage;
-        List<AiReportResponse.Allocation> result = new ArrayList<>();
+        int totalCapacity = candidates.stream().mapToInt(AiReportRequest.LineCondition::availableCapacity).sum();
+        int assignableQty = Math.min(shortage, totalCapacity);
+        if (assignableQty == 0 || totalCapacity == 0) return List.of();
+
+        Map<String, Integer> quantities = new LinkedHashMap<>();
+        List<AllocationShare> shares = new ArrayList<>();
+        int floorTotal = 0;
         for (AiReportRequest.LineCondition line : candidates) {
-            if (remaining == 0) break;
-            int qty = Math.min(remaining, line.availableCapacity());
-            result.add(new AiReportResponse.Allocation(
-                    line.lineId(), qty,
-                    "가용 " + line.availableCapacity() + "개, 기존 계획 " + line.currentPlan() + "개"
-                            + (line.constraint() == null || line.constraint().isBlank() ? "" : ", 제약: " + line.constraint())));
-            remaining -= qty;
+            double exact = (double) assignableQty * line.availableCapacity() / totalCapacity;
+            int floor = Math.min((int) Math.floor(exact), line.availableCapacity());
+            quantities.put(line.lineId(), floor);
+            shares.add(new AllocationShare(line, exact - floor));
+            floorTotal += floor;
         }
-        return result;
+
+        shares.sort(Comparator.comparingDouble(AllocationShare::remainder).reversed()
+                .thenComparing(share -> share.line().lineId()));
+        int remainder = assignableQty - floorTotal;
+        while (remainder > 0) {
+            boolean allocated = false;
+            for (AllocationShare share : shares) {
+                AiReportRequest.LineCondition line = share.line();
+                int current = quantities.get(line.lineId());
+                if (current >= line.availableCapacity()) continue;
+                quantities.put(line.lineId(), current + 1);
+                remainder--;
+                allocated = true;
+                if (remainder == 0) break;
+            }
+            if (!allocated) break;
+        }
+
+        return candidates.stream()
+                .map(line -> new AiReportResponse.Allocation(
+                        line.lineId(), quantities.get(line.lineId()),
+                        "잔여 능력 비율 " + String.format("%.1f", line.availableCapacity() * 100.0 / totalCapacity)
+                                + "%, 가용 " + line.availableCapacity() + "개, 기존 계획 " + line.currentPlan() + "개"
+                                + (line.constraint() == null || line.constraint().isBlank() ? "" : ", 제약: " + line.constraint())))
+                .toList();
+    }
+
+    private record AllocationShare(AiReportRequest.LineCondition line, double remainder) {
     }
 
     private Draft mockDraft(AiReportRequest request, int shortage, List<AiReportResponse.Allocation> allocations) {

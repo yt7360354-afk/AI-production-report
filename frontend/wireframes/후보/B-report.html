@@ -10,7 +10,8 @@
 .rep { grid-template-rows: auto minmax(0, 1fr); }
 .head { display: flex; align-items: center; gap: var(--sp-6); }
 .head h1 { margin: 0; font-size: var(--fs-xl); font-weight: 600; }
-.body { display: grid; grid-template-columns: clamp(300px, 22vw, 380px) minmax(0, 1fr); gap: var(--sp-4); min-height: 0; }
+.body { display: grid; grid-template-columns: clamp(300px, 22vw, 380px) minmax(0, 1fr); gap: var(--sp-4); min-width: 0; min-height: 0; }
+.body > * { min-width: 0; }
 
 /* 목록 */
 .list { list-style: none; margin: 0 calc(var(--sp-5) * -1); padding: 0; overflow: auto; }
@@ -19,12 +20,30 @@
 .list a:hover { background: var(--surface-2); }
 .list a.on { background: var(--surface-2); border-left-color: var(--text); }
 .list a b { font-weight: 600; }
-.list a span { color: var(--text-2); font-size: var(--fs-sm); }
+.list a span { grid-column: 1 / -1; color: var(--text-2); font-size: var(--fs-sm); }
 .list a time { color: var(--text-3); font-size: var(--fs-sm); }
+.list-section { margin: 0; padding: 10px var(--sp-5) 7px; border-top: 1px solid var(--line-2); color: var(--text-2); font-size: 12px; font-weight: 700; }
+.list-section:first-child { border-top: 0; }
+.trouble-card { margin: 0 var(--sp-3) 10px; padding: 11px 12px; border: 1px solid #e5b8b8; border-radius: 7px; background: #fff8f8; animation: trouble-alert 1.25s ease-in-out infinite; }
+@keyframes trouble-alert {
+  0%, 100% { background: #fff8f8; border-color: #e5b8b8; box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+  50% { background: #fee2e2; border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, .12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trouble-card { animation: none; }
+}
+.trouble-card .trouble-top { display: flex; align-items: center; gap: 7px; }
+.trouble-card b { font-size: 13px; }
+.trouble-card time { margin-left: auto; color: var(--text-3); font-size: 11px; }
+.trouble-card p { margin: 5px 0 7px; color: var(--text-2); font-size: 11px; line-height: 1.35; }
+.trouble-badge { display: inline-flex; padding: 3px 7px; border-radius: 999px; background: #fee2e2; color: #991b1b; font-size: 10px; font-weight: 700; }
+.trouble-badge.created { background: #dcfce7; color: #166534; }
+.previous-reports .d { border-top: 1px solid var(--line-2); }
+.previous-reports > .list-section { border-top: 1px solid var(--line-2); }
 
 /* 보고서 */
-.doc { overflow: auto; padding: var(--sp-4); background: #e4e6e9; }
-.doc-head { display: flex; align-items: flex-start; gap: var(--sp-4); padding-bottom: var(--sp-4); border-bottom: 1px solid var(--line-2); }
+.doc { overflow: auto; min-width: 0; padding: var(--sp-4); background: #e4e6e9; }
+.doc-head { display: flex; align-items: flex-start; gap: var(--sp-4); min-height: 52px; box-sizing: border-box; padding-bottom: var(--sp-4); border-bottom: 1px solid var(--line-2); }
 .doc-head h2 { margin: 0; font-size: var(--fs-xl); font-weight: 600; }
 .doc-head p { margin: 4px 0 0; color: var(--text-3); font-size: var(--fs-sm); }
 .doc-head .btn { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
@@ -33,6 +52,29 @@
 .btn.primary:disabled { opacity: .55; cursor: wait; }
 .ai-state { color: var(--text-3); font-size: var(--fs-xs); margin-left: auto; }
 .doc-head .btn svg { width: 16px; height: 16px; }
+.report-tools { display: grid; grid-template-columns: minmax(260px, 1fr) auto; gap: 10px; align-items: end; margin-top: 10px; padding: 10px; border: 1px solid var(--line-2); border-radius: 8px; background: var(--surface); }
+.request-box label, .status-box label { display: block; margin-bottom: 4px; color: var(--text-2); font-size: var(--fs-xs); font-weight: 600; }
+.request-box textarea { box-sizing: border-box; width: 100%; min-height: 42px; resize: vertical; padding: 8px 10px; border: 1px solid var(--line-2); border-radius: 6px; background: #fff; font: inherit; color: var(--text); }
+.tool-actions { display: flex; align-items: end; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.status-box select { height: 34px; padding: 0 28px 0 9px; border: 1px solid var(--line-2); border-radius: 6px; background: #fff; color: var(--text); }
+.status-pill { display: inline-flex; align-items: center; height: 25px; margin-left: 8px; padding: 0 9px; border-radius: 999px; background: #fff3cd; color: #795d00; font-size: 11px; font-weight: 700; vertical-align: middle; }
+.status-pill.approved { background: #dff4e7; color: #176b3a; }
+.btn.success { background: #176b3a; border-color: #176b3a; color: #fff; }
+.btn:disabled { opacity: .48; cursor: not-allowed; }
+.info-panel { display: none; grid-column: 1 / -1; padding: 10px 12px; border-top: 1px solid var(--line-2); background: #fff; font-size: 12px; }
+.info-panel.on { display: block; }
+.info-panel h4 { margin: 0 0 7px; font-size: 13px; }
+.info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.info-grid div { padding: 7px 9px; border: 1px solid var(--line-2); border-radius: 5px; }
+.info-grid b { display: block; margin-bottom: 2px; }
+.report-editable.editing { outline: 2px solid #2563eb; outline-offset: 1px; background: #eff6ff !important; cursor: text; }
+.report-paper.editing-all { box-shadow: 0 0 0 3px #2563eb, 0 3px 14px rgba(0,0,0,.09); cursor: text; }
+.report-paper.editing-all * { cursor: text; }
+.report-paper.editing-all p:hover, .report-paper.editing-all td:hover, .report-paper.editing-all h1:hover, .report-paper.editing-all h3:hover, .report-paper.editing-all li:hover, .report-paper.editing-all span:hover, .report-paper.editing-all b:hover { background: #eff6ff !important; outline: 1px dashed #60a5fa; }
+.report-paper.awaiting { display: none; }
+.report-empty { width: 794px; height: 420px; box-sizing: border-box; margin: var(--sp-4) auto 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 1px dashed #b8bdc5; border-radius: 8px; background: rgba(255,255,255,.55); color: var(--text-2); text-align: center; }
+.report-empty svg { width: 28px; height: 28px; }
+.report-empty b { color: var(--text); font-size: 15px; }
 .report-paper { box-sizing: border-box; flex: none; width: 794px; height: 1123px; margin: var(--sp-4) auto 0; padding: 16px 21px; overflow: hidden; background: #fff; color: #000; border: 1px solid #cfd2d6; box-shadow: 0 3px 14px rgba(0,0,0,.09); font-family: "Malgun Gothic", "맑은 고딕", sans-serif; font-size: 12px; line-height: 1.35; }
 .report-paper * { color: #000 !important; }
 .formal-head { height: 165px; box-sizing: border-box; text-align: left; padding: 0; border: 0; }
@@ -48,10 +90,10 @@
 .summary-item b { font-size: 12px; line-height: 1.2; font-weight: 400; }
 .summary-item small { margin-left: 2px; font-size: 12px; font-weight: 400; }
 .doc section { display: block; box-sizing: border-box; margin: 7px 0 0; padding: 0 0 8px; border: 0; page-break-inside: avoid; }
-.doc section:nth-of-type(1) { height: 120px; }
-.doc section:nth-of-type(2) { height: 108px; }
-.doc section:nth-of-type(3) { height: 220px; }
-.doc section:nth-of-type(4) { height: 98px; }
+.doc section:nth-of-type(1) { height: 110px; }
+.doc section:nth-of-type(2) { height: 100px; }
+.doc section:nth-of-type(3) { height: 244px; }
+.doc section:nth-of-type(4) { height: 92px; }
 .doc section:nth-of-type(5) { height: 116px; }
 .doc section:nth-of-type(6) { height: 116px; }
 .doc h3 { display: block; width: auto; margin: 0 0 6px; padding: 3px 4px; font-size: 12px; line-height: 1.35; font-weight: 700; background: #eee; border-left: 3px solid #000; }
@@ -66,13 +108,16 @@
 .tbl { max-width: none; margin-top: 2px; }
 .report-paper .tbl th, .report-paper .tbl td { position: static; height: 24px; padding: 2px 4px; border: 1px solid #000; background: #fff; font-size: 12px; line-height: 1.2; }
 .report-paper .tbl th { background: #eee; font-weight: 600; }
+.report-paper .tbl tr.stopped td { background: #f3f3f3; color: #777 !important; }
+.report-paper .tbl tr.excluded td { background: #fff6e5; }
 .tbl tfoot td { font-weight: 600; border-bottom: 0; border-top: 1px solid var(--line-2); }
 .tbl td.add { font-weight: 600; }
 .result { display: flex; align-items: center; gap: var(--sp-3); }
 .result .grade { height: 28px; }
 .note2 { color: var(--text-3); font-size: var(--fs-xs); margin-top: var(--sp-2); }
 .report-list { margin: 0; padding-left: 16px; }
-.report-list li { margin: 0 0 1px; }
+.report-list li { margin: 0 0 3px; font-size: 11px; line-height: 1.3; }
+.report-paper p, .report-paper li, .report-paper td, .report-paper th { word-break: keep-all; overflow-wrap: break-word; }
 .result { margin: 0; gap: 6px; }
 .approval { height: 63px; box-sizing: border-box; margin-top: 8px; padding-top: 0; }
 .approval table { width: 100%; border-collapse: collapse; table-layout: fixed; }
@@ -83,7 +128,7 @@
 @media print {
   @page { size: A4; margin: 12mm; }
   body { display: block; min-width: 0; height: auto; background: #fff; }
-  .top, .head, .body > .panel:first-child, .doc-head { display: none !important; }
+  .top, .head, .body > .panel:first-child, .doc-head, .report-tools { display: none !important; }
   .page, .body, .doc { display: block; padding: 0; border: 0; background: #fff; overflow: visible; }
   .report-paper { width: 100%; margin: 0; padding: 0; border: 0; box-shadow: none; }
 }
@@ -103,15 +148,22 @@
 
   <div class="body">
     <section class="panel">
-      <div class="ph"><h2>보고서 목록</h2><span class="meta">날짜별</span></div>
+      <div class="ph"><h2>계획수정 보고서</h2><span class="meta">현재·이력</span></div>
       <div class="list" id="reportList">
-        <div class="d">2026-11-16 (월)</div>
-        <a class="on" href="#"><b>L2 프레스 3단</b><time>14:24:31</time><span>장비고장(알람)</span></a>
-        <div class="d">2026-11-14 (토)</div>
-        <a href="#"><b>L4 프레스 2단</b><time>16:40:05</time><span>장비고장</span></a>
-        <div class="d">2026-11-12 (목)</div>
-        <a href="#"><b>도장 #1</b><time>09:12:44</time><span>장비고장(알람)</span></a>
-        <a href="#"><b>L6 슬리팅</b><time>03:05:18</time><span>안전문제</span></a>
+        <h3 class="list-section">현재 트러블 슈팅</h3>
+        <div class="trouble-card" id="currentTrouble" data-downtime-id="5001">
+          <div class="trouble-top"><b>L2 프레스 3단</b><time>14:20:12 발생</time></div>
+          <p>Pressure 1 상한 초과 · 장비고장(알람) · 현재 조치 중</p>
+          <span class="trouble-badge" id="troubleReportState">보고서 미작성</span>
+        </div>
+        <div class="previous-reports" id="previousReports">
+          <h3 class="list-section">이전에 작성한 보고서</h3>
+          <div class="d">2026-11-14 (토)</div>
+          <a href="#" data-archive-id="report-1114"><b>L4 프레스 2단</b><time>16:40:05</time><span>AI 계획수정 보고서</span></a>
+          <div class="d">2026-11-12 (목)</div>
+          <a href="#" data-archive-id="report-1112-paint"><b>도장 #1</b><time>09:12:44</time><span>AI 계획수정 보고서</span></a>
+          <a href="#" data-archive-id="report-1112-l6"><b>L6 슬리팅</b><time>03:05:18</time><span>AI 계획수정 보고서</span></a>
+        </div>
       </div>
     </section>
 
@@ -119,22 +171,35 @@
       <div class="doc-head">
         <div><h2 id="reportTitle">계획수정 보고서 · L2 프레스 3단</h2><p id="reportMeta">현재 공정·설비 조건을 기준으로 작성된 의사결정 지원 보고서</p></div>
         <button class="btn primary" id="generateBtn"><i data-lucide="sparkles"></i>AI 보고서 생성</button>
-        <button class="btn" id="docBtn"><i data-lucide="file-text"></i>Google Docs(.doc)</button>
-        <button class="btn" id="pdfBtn"><i data-lucide="download"></i>PDF 다운로드</button>
+        <button class="btn" id="docBtn" disabled><i data-lucide="file-text"></i>Google Docs(.doc)</button>
+        <button class="btn" id="pdfBtn" disabled><i data-lucide="download"></i>PDF 다운로드</button>
       </div>
 
-      <article class="report-paper" id="reportDocument">
+      <div class="report-tools">
+        <div class="request-box">
+          <label for="additionalRequest">AI 추가 요청</label>
+          <textarea id="additionalRequest" placeholder="예: L1은 긴급 주문 생산 중이므로 재배정 대상에서 제외하고 납기 준수를 우선해줘."></textarea>
+        </div>
+        <div class="tool-actions">
+          <button class="btn" id="editBtn" disabled><i data-lucide="pencil"></i>값 수정</button>
+          <button class="btn success" id="applyBtn" disabled><i data-lucide="check-circle"></i>생산계획 반영</button>
+        </div>
+        <div class="info-panel" id="requestResultPanel"><h4>AI 추가 요청 반영 결과</h4><div class="info-grid" id="requestResultGrid"></div></div>
+      </div>
+
+      <div class="report-empty" id="reportEmpty"><i data-lucide="file-plus-2"></i><b>생성된 AI 보고서가 없습니다</b><span>추가 요청을 입력한 뒤 ‘AI 보고서 생성’을 눌러주세요.</span></div>
+      <article class="report-paper awaiting" id="reportDocument">
       <header class="formal-head">
         <h1>생산계획 수정 검토 보고서</h1>
         <p class="document-class">PRODUCTION PLAN REVISION REPORT</p>
         <table class="doc-info">
           <tr><th>문서번호</th><td id="documentNo">AI-RPT-20261116-001</td><th>작성일시</th><td id="generatedAt">2026-11-16 14:24:31</td></tr>
-          <tr><th>대상 라인</th><td>L2</td><th>작성 구분</th><td id="modelName">AI 분석 초안</td></tr>
-          <tr><th>작성자</th><td>김현수</td><th>문서 상태</th><td>검토 대기</td></tr>
+          <tr><th>대상 라인</th><td id="targetLine" class="report-editable">L2</td><th>작성 구분</th><td id="modelName">AI 분석 초안</td></tr>
+          <tr><th>작성자</th><td class="report-editable">김현수</td><th>문서 상태</th><td id="documentStatus">검토 대기</td></tr>
         </table>
         <div class="summary-grid">
-          <div class="summary-item"><span>생산 계획</span><b>200<small>개</small></b></div>
-          <div class="summary-item"><span>현재 실적</span><b>108<small>개</small></b></div>
+          <div class="summary-item"><span>생산 계획</span><b id="planQty" class="report-editable">200</b><small>개</small></div>
+          <div class="summary-item"><span>현재 실적</span><b id="actualQty" class="report-editable">108</b><small>개</small></div>
           <div class="summary-item"><span>예상 부족</span><b id="summaryShortage">92<small>개</small></b></div>
           <div class="summary-item"><span>정지 지속</span><b>11:56</b></div>
         </div>
@@ -143,7 +208,7 @@
       <section>
         <h3>1. 발생 현황</h3>
         <div>
-          <p id="incidentText">L2 프레스 3단이 14:20:12에 장비고장(알람)으로 멈췄습니다. 라인 안 설비는 한 줄로 이어져 있어 L2 전체가 멈춘 것으로 보고 계산했습니다.</p>
+          <p id="incidentText" class="report-editable">L2 프레스 3단이 14:20:12에 장비고장(알람)으로 멈췄습니다. 라인 안 설비는 한 줄로 이어져 있어 L2 전체가 멈춘 것으로 보고 계산했습니다.</p>
           <dl class="facts"><dt>라인</dt><dt>설비</dt><dt>발생</dt><dt>원인</dt><dd>L2</dd><dd>L2 프레스 3단</dd><dd>14:20:12</dd><dd>Pressure 1 상한 초과 (356 / 상한 350)</dd></dl>
         </div>
       </section>
@@ -162,18 +227,18 @@
       <section>
         <h3>3. 생산 재배정안</h3>
         <div>
-          <p id="allocationText">정상 라인 5개의 남은 능력 비율대로 92개를 나눴습니다. 남은 능력 = 남은 시간 ÷ 라인 CT 120초 − 남은 라인 계획.</p>
+          <p id="allocationText" class="report-editable">정상 라인 5개의 남은 능력 비율대로 92개를 나눴습니다. 남은 능력 = 남은 시간 ÷ 라인 CT 120초 − 남은 라인 계획.</p>
           <table class="tbl">
             <thead><tr><th>라인</th><th class="num">남은 라인 계획</th><th class="num">남은 능력</th><th class="num">비율</th><th class="num">추가 배정</th></tr></thead>
             <tbody id="alloc"></tbody>
-            <tfoot><tr><td>합계</td><td class="num">366</td><td class="num" id="totalCapacity">1,069</td><td class="num">100%</td><td class="num" id="totalAllocation">92</td></tr></tfoot>
+            <tfoot><tr><td>합계</td><td class="num" id="totalPlan">458</td><td class="num" id="totalCapacity">1,069</td><td class="num">100%</td><td class="num" id="totalAllocation">92</td></tr></tfoot>
           </table>
         </div>
       </section>
 
       <section>
         <h3>4. 종합 검토</h3>
-        <div class="result"><span class="grade ok" id="resultGrade">목표 달성 가능</span><p id="resultText">남은 능력 합 1,069개가 부족 수량 92개보다 많아 오늘 목표 1,200개를 맞출 수 있을 것으로 예상합니다.</p></div>
+        <div class="result"><span class="grade ok" id="resultGrade">목표 달성 가능</span><p id="resultText" class="report-editable">남은 능력 합 1,069개가 부족 수량 92개보다 많아 오늘 목표 1,200개를 맞출 수 있을 것으로 예상합니다.</p></div>
       </section>
 
       <section>
@@ -187,7 +252,7 @@
       </section>
 
       <div class="approval">
-        <table><thead><tr><th>작성</th><th>생산관리 검토</th><th>품질 검토</th><th>최종 승인</th></tr></thead><tbody><tr><td>김현수</td><td></td><td></td><td></td></tr></tbody></table>
+        <table><thead><tr><th>작성</th><th>생산관리 팀장</th></tr></thead><tbody><tr><td>김현수</td><td></td></tr></tbody></table>
       </div>
       <p class="note2">※ 본 문서는 AI 기반 의사결정 지원 초안이며, 담당자 검토 및 승인 후 생산계획에 반영합니다.</p>
       </article>
@@ -201,9 +266,117 @@
 <script>
   renderTop('리포트')
   // 데모 값: 남은 시간 34,529초 ÷ 120 = 287개
-  const A = [['L1', 69, 218, 19], ['L3', 73, 214, 18], ['L4', 81, 206, 18], ['L5', 70, 217, 19], ['L6', 73, 214, 18]]
-  alloc.innerHTML = A.map(([l, rp, cap, add]) => `<tr><td>${l}</td><td class="num">${rp}</td><td class="num">${cap}</td><td class="num">${(cap / 1069 * 100).toFixed(1)}%</td><td class="num add">+${add}</td></tr>`).join('')
-  const conditions = A.map(([lineId, currentPlan, availableCapacity]) => ({ lineId, status: 'RUNNING', availableCapacity, currentPlan, constraint: '동일 제품 생산 가능' }))
+  const A = [['L1', 69, 218, 19, 'RUNNING'], ['L2', 92, 0, 0, 'STOPPED'], ['L3', 73, 214, 18, 'RUNNING'], ['L4', 81, 206, 18, 'RUNNING'], ['L5', 70, 217, 19, 'RUNNING'], ['L6', 73, 214, 18, 'RUNNING']]
+  const renderAllocationRows = (allocationByLine = {}, excludedLines = [], requestedStops = []) => {
+    const capacity = A.reduce((sum, [, , cap]) => sum + cap, 0)
+    alloc.innerHTML = A.map(([lineId, currentPlan, availableCapacity, defaultAdd, status]) => {
+      const unavailable = status === 'STOPPED' || requestedStops.includes(lineId) || excludedLines.includes(lineId)
+      const add = unavailable ? 0 : (allocationByLine[lineId] ?? defaultAdd)
+      const rowClass = status === 'STOPPED' || requestedStops.includes(lineId) ? 'stopped' : excludedLines.includes(lineId) ? 'excluded' : ''
+      const label = status === 'STOPPED' ? `${lineId} (정지)` : requestedStops.includes(lineId) ? `${lineId} (요청 정지)` : excludedLines.includes(lineId) ? `${lineId} (제외)` : lineId
+      return `<tr class="${rowClass}"><td>${label}</td><td class="num">${currentPlan}</td><td class="num">${availableCapacity}</td><td class="num">${capacity ? (availableCapacity / capacity * 100).toFixed(1) : '0.0'}%</td><td class="num add">${add > 0 ? '+' : ''}${add}</td></tr>`
+    }).join('')
+  }
+  renderAllocationRows()
+  const conditions = A.map(([lineId, currentPlan, availableCapacity, , status]) => ({ lineId, status, availableCapacity, currentPlan, constraint: status === 'STOPPED' ? '설비 정지' : '동일 제품 생산 가능' }))
+
+  const archivedReports = {
+    'report-1114': {
+      documentNo: 'AI-RPT-20261114-004', generatedAt: '2026-11-14 16:40:05', line: 'L4', equipment: 'L4 프레스 2단',
+      plan: 240, actual: 151, shortage: 89, status: '승인 완료',
+      incident: 'L4 프레스 2단에서 금형 위치 센서 이상이 발생하여 16:40:05부터 라인이 정지되었습니다. 미생산 예정 수량 89개를 정상 가동 라인에 재배정했습니다.',
+      allocation: { L1: 23, L2: 0, L3: 22, L4: 0, L5: 22, L6: 22 }, stopped: ['L2', 'L4'],
+      result: '정상 가동 중인 4개 라인에 89개를 재배정하여 당일 납기 수량을 확보했습니다.',
+      actions: ['L4 금형 위치 센서와 배선 상태를 점검합니다.', 'L1·L3·L5·L6에 재배정 수량과 작업 순서를 전달합니다.', '시험 생산 5개 확인 후 L4 재가동 여부를 결정합니다.'],
+      risks: ['L4 복구가 지연되면 다음 교대조 작업 순서를 다시 조정해야 합니다.', '재배정 라인의 금형 교체시간과 자재 투입 상태를 확인해야 합니다.']
+    },
+    'report-1112-paint': {
+      documentNo: 'AI-RPT-20261112-002', generatedAt: '2026-11-12 09:12:44', line: '도장 #1', equipment: '도장 #1 건조로',
+      plan: 180, actual: 64, shortage: 116, status: '승인 완료',
+      incident: '도장 #1 건조로 온도가 관리 기준 아래로 내려가 09:12:44부터 투입을 중지했습니다. 품질 확인 전까지 도장 #1 생산계획을 도장 #2와 후속 가능 라인으로 전환했습니다.',
+      allocation: { L1: 28, L2: 0, L3: 30, L4: 29, L5: 29, L6: 0 }, stopped: ['L2', 'L6'],
+      result: '대체 공정에 116개를 재배정하고 품질 검사 대기 물량을 분리하여 납기 영향을 최소화했습니다.',
+      actions: ['건조로 온도센서와 히터 출력을 점검합니다.', '대체 라인에 116개 생산 순서를 반영합니다.', '도장 품질 확인 결과에 따라 재투입 물량을 확정합니다.'],
+      risks: ['색상 변경에 따른 세척시간이 추가될 수 있습니다.', '품질 검사 결과에 따라 일부 물량의 재작업이 발생할 수 있습니다.']
+    },
+    'report-1112-l6': {
+      documentNo: 'AI-RPT-20261112-001', generatedAt: '2026-11-12 03:05:18', line: 'L6', equipment: 'L6 슬리팅',
+      plan: 160, actual: 87, shortage: 73, status: '승인 완료',
+      incident: 'L6 슬리팅 장력 제어 알람으로 03:05:18부터 설비가 정지되었습니다. L6 잔여 계획 73개는 L1·L3·L4·L5로 분산했습니다.',
+      allocation: { L1: 19, L2: 0, L3: 18, L4: 18, L5: 18, L6: 0 }, stopped: ['L2', 'L6'],
+      result: '정지 라인 추가 배정을 0개로 유지하고 정상 라인에 73개를 배정하여 계획 수량을 확보했습니다.',
+      actions: ['L6 장력 센서와 롤러 정렬 상태를 확인합니다.', '정상 4개 라인에 재배정 수량을 반영합니다.', 'L6 복구 후 시험 가동 결과를 생산관리 팀장에게 보고합니다.'],
+      risks: ['소재 폭 사양에 따라 일부 라인에서 생산이 제한될 수 있습니다.', '복구 후 최초 생산품의 치수 검사가 필요합니다.']
+    }
+  }
+
+  const showArchivedReport = report => {
+    reportTitle.firstChild.textContent = `계획수정 보고서 · ${report.equipment} `
+    reportMeta.textContent = `${report.generatedAt} 작성 · 이전 작성 보고서 예시`
+    documentNo.textContent = report.documentNo
+    generatedAt.textContent = report.generatedAt
+    targetLine.textContent = report.line
+    modelName.textContent = 'AI 분석 보고서'
+    documentStatus.textContent = report.status
+    planQty.textContent = report.plan
+    actualQty.textContent = report.actual
+    summaryShortage.childNodes[0].textContent = report.shortage
+    shortageQty.textContent = report.shortage
+    incidentText.textContent = report.incident
+    allocationText.textContent = `${report.line} 정지로 발생한 부족 수량 ${report.shortage}개를 가동 가능한 라인에 재배정했습니다. 정지 라인의 추가 배정은 0개입니다.`
+    renderAllocationRows(report.allocation, [], report.stopped)
+    totalPlan.textContent = A.reduce((sum, [, plan]) => sum + plan, 0).toLocaleString('ko-KR')
+    totalCapacity.textContent = A.reduce((sum, [, , capacity]) => sum + capacity, 0).toLocaleString('ko-KR')
+    totalAllocation.textContent = Object.values(report.allocation).reduce((sum, qty) => sum + qty, 0).toLocaleString('ko-KR')
+    resultGrade.textContent = '계획 반영 완료'
+    resultGrade.className = 'grade ok'
+    resultText.textContent = report.result
+    actionList.innerHTML = report.actions.map(x => `<li>${x}</li>`).join('')
+    riskList.innerHTML = report.risks.map(x => `<li>${x}</li>`).join('')
+    reportEmpty.style.display = 'none'
+    reportDocument.classList.remove('awaiting')
+    requestResultPanel.classList.remove('on')
+    editBtn.disabled = false
+    applyBtn.disabled = true
+    docBtn.disabled = false
+    pdfBtn.disabled = false
+    lucide.createIcons()
+  }
+
+  previousReports.addEventListener('click', event => {
+    const link = event.target.closest('a[data-archive-id]')
+    if (!link) return
+    event.preventDefault()
+    reportList.querySelectorAll('a').forEach(x => x.classList.remove('on'))
+    link.classList.add('on')
+    showArchivedReport(archivedReports[link.dataset.archiveId])
+  })
+
+  const numberValue = element => Number(String(element.textContent).replace(/[^0-9.-]/g, '')) || 0
+  const refreshCalculatedValues = () => {
+    const shortage = Math.max(0, numberValue(planQty) - numberValue(actualQty))
+    shortageQty.textContent = String(shortage)
+    summaryShortage.innerHTML = `${shortage}<small>개</small>`
+  }
+
+  let editing = false
+  editBtn.addEventListener('click', () => {
+    editing = !editing
+    reportDocument.contentEditable = String(editing)
+    reportDocument.classList.toggle('editing-all', editing)
+    editBtn.innerHTML = editing ? '<i data-lucide="save"></i>수정 저장' : '<i data-lucide="pencil"></i>값 수정'
+    if (!editing) refreshCalculatedValues()
+    lucide.createIcons()
+  })
+
+  applyBtn.addEventListener('click', () => {
+    if (!confirm(`${targetLine.textContent.trim()} 생산계획에 재배정 수량 ${totalAllocation.textContent}개를 반영하시겠습니까?`)) return
+    documentStatus.textContent = '계획 반영 완료'
+    applyBtn.innerHTML = '<i data-lucide="check"></i>반영 완료'
+    reportMeta.textContent = `${new Date().toLocaleString('ko-KR')} 생산계획 반영 완료 · 데모 처리`
+    alert('생산계획 반영이 완료되었습니다. 현재 데모에서는 화면 상태와 이력만 변경됩니다.')
+    lucide.createIcons()
+  })
 
   generateBtn.addEventListener('click', async () => {
     generateBtn.disabled = true
@@ -214,10 +387,13 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          downtimeId: Number(currentTrouble.dataset.downtimeId),
           lineId: 'L2', equipmentId: 'L2-PR3', equipmentName: 'L2 프레스 3단',
           faultReason: 'Pressure 1 상한 초과 (356 / 상한 350)', faultStartedAt: '2026-11-16T14:20:12',
           targetQty: 200, completedQty: 108, dueQty: 200, dueAt: '2026-11-16 24:00',
-          lineConditions: conditions, operatorNote: '품질 확인 후 재가동 필요'
+          lineConditions: conditions,
+          operatorNote: '품질 확인 후 재가동 필요',
+          additionalRequest: additionalRequest.value.trim()
         })
       })
       if (!res.ok) throw new Error(`서버 오류 ${res.status}`)
@@ -225,32 +401,71 @@
       const assigned = report.allocations.reduce((sum, x) => sum + x.quantity, 0)
       const capacity = conditions.reduce((sum, x) => sum + x.availableCapacity, 0)
       const conditionByLine = Object.fromEntries(conditions.map(x => [x.lineId, x]))
-      reportTitle.textContent = `계획수정 보고서 · ${report.title}`
+      reportTitle.firstChild.textContent = `계획수정 보고서 · ${report.title} `
       reportMeta.textContent = `${new Date(report.generatedAt).toLocaleString('ko-KR')} 생성 · AI 초안 · 제안만 하며 목표와 설비 계획은 바꾸지 않음`
+      if (additionalRequest.value.trim()) reportMeta.textContent += ` · 추가 요청 반영: ${additionalRequest.value.trim()}`
       documentNo.textContent = `AI-RPT-${new Date(report.generatedAt).toISOString().slice(0,10).replaceAll('-', '')}-${report.reportId.slice(0, 6).toUpperCase()}`
       generatedAt.textContent = new Date(report.generatedAt).toLocaleString('ko-KR')
       modelName.textContent = report.mock ? 'AI 분석 초안(데모)' : `AI 분석 초안(${report.model})`
-      incidentText.textContent = report.summary
-      shortageQty.textContent = String(200 - 108)
-      summaryShortage.innerHTML = `${200 - 108}<small>개</small>`
-      allocationText.textContent = report.actions.join(' ')
-      alloc.innerHTML = report.allocations.map(x => {
-        const c = conditionByLine[x.lineId]
-        return `<tr><td>${x.lineId}</td><td class="num">${c.currentPlan}</td><td class="num">${c.availableCapacity}</td><td class="num">${(c.availableCapacity / capacity * 100).toFixed(1)}%</td><td class="num add">+${x.quantity}</td></tr>`
-      }).join('')
+      incidentText.textContent = `${targetLine.textContent.trim()} ${report.summary}`
+      const calculatedShortage = report.calculatedShortage ?? (numberValue(planQty) - numberValue(actualQty))
+      shortageQty.textContent = String(calculatedShortage)
+      summaryShortage.innerHTML = `${calculatedShortage}<small>개</small>`
+      const interpretation = report.requestInterpretation || { excludedLines: [], stoppedLines: [], priority: 'BALANCED', appliedRules: ['기본 조건 적용'] }
+      requestResultGrid.innerHTML = `
+        <div><b>정지·제외 라인</b>${interpretation.excludedLines.length ? interpretation.excludedLines.join(', ') : '없음'}</div>
+        <div><b>우선 기준</b>${interpretation.priority === 'DUE_DATE' ? '납기 준수' : interpretation.priority === 'SAFETY' ? '안전·품질' : '잔여 생산능력'}</div>
+        <div><b>적용 규칙</b>${interpretation.appliedRules.join(' · ')}</div>`
+      requestResultPanel.classList.add('on')
+      const allocationByLine = Object.fromEntries(report.allocations.map(x => [x.lineId, x.quantity]))
+      renderAllocationRows(allocationByLine, interpretation.excludedLines, interpretation.stoppedLines || [])
+      const activeAllocationLines = report.allocations.filter(x => x.quantity > 0).map(x => x.lineId).join(', ')
+      allocationText.textContent = `총 ${calculatedShortage}개를 잔여 생산능력 비율에 따라 ${activeAllocationLines || '배정 가능한 라인 없음'}에 재배정합니다. 정지·제외 라인에는 추가 배정하지 않습니다.`
+      totalPlan.textContent = conditions.reduce((sum, x) => sum + x.currentPlan, 0).toLocaleString('ko-KR')
       totalCapacity.textContent = capacity.toLocaleString('ko-KR')
       totalAllocation.textContent = assigned.toLocaleString('ko-KR')
-      resultGrade.textContent = assigned >= 92 ? '목표 달성 가능' : '추가 조정 필요'
-      resultGrade.className = `grade ${assigned >= 92 ? 'ok' : 'danger'}`
-      resultText.textContent = `${report.summary} ${report.risks.join(' ')}`
-      actionList.innerHTML = report.actions.map(x => `<li>${x}</li>`).join('')
-      riskList.innerHTML = report.risks.map(x => `<li>${x}</li>`).join('') + '<li>담당자 승인 전에는 생산계획과 설비 설정을 변경하지 않습니다.</li>'
+      resultGrade.textContent = assigned >= calculatedShortage ? '목표 달성 가능' : '추가 조정 필요'
+      resultGrade.className = `grade ${assigned >= calculatedShortage ? 'ok' : 'danger'}`
+      const unresolved = Math.max(0, calculatedShortage - assigned)
+      resultText.textContent = unresolved === 0
+        ? `재배정 필요 수량 ${calculatedShortage}개 전량을 정상 라인에 배정할 수 있어 계산상 목표 달성이 가능합니다.`
+        : `재배정 필요 수량 중 ${unresolved}개가 미배정되어 추가 생산계획 조정 또는 납기 협의가 필요합니다.`
+      const allocationAction = report.allocations.filter(x => x.quantity > 0)
+        .map(x => `${x.lineId} ${x.quantity}개`).join(', ')
+      actionList.innerHTML = [
+        `${targetLine.textContent.trim()} 정지 설비의 안전 상태와 고장 원인을 확인합니다.`,
+        `재배정안을 적용합니다: ${allocationAction || '배정 가능한 라인 없음'}.`,
+        '생산관리자와 품질담당자의 검토·승인 후 계획에 반영합니다.'
+      ].map(x => `<li>${x}</li>`).join('')
+      riskList.innerHTML = [
+        report.risks[0] || '재배정 라인의 준비 상태를 확인해야 합니다.',
+        unresolved > 0 ? `미배정 ${unresolved}개에 대한 납기 협의가 필요합니다.` : '실제 복구시간에 따라 수량을 다시 계산해야 합니다.',
+        '담당자 승인 전에는 생산계획과 설비 설정을 변경하지 않습니다.'
+      ].map(x => `<li>${x}</li>`).join('')
+      reportEmpty.style.display = 'none'
+      reportDocument.classList.remove('awaiting')
+      editBtn.disabled = false
+      applyBtn.disabled = false
+      docBtn.disabled = false
+      pdfBtn.disabled = false
+      documentStatus.textContent = '검토 대기'
       const history = document.createElement('a')
       history.href = '#'
       history.className = 'on'
       history.innerHTML = `<b>L2 프레스 3단</b><time>${new Date(report.generatedAt).toLocaleTimeString('ko-KR', { hour12: false })}</time><span>AI 계획수정 보고서</span>`
       reportList.querySelectorAll('a').forEach(x => x.classList.remove('on'))
-      reportList.insertBefore(history, reportList.children[1])
+      let todayGroup = previousReports.querySelector('[data-generated-date]')
+      if (!todayGroup) {
+        const generatedDate = new Date(report.generatedAt)
+        todayGroup = document.createElement('div')
+        todayGroup.className = 'd'
+        todayGroup.dataset.generatedDate = generatedDate.toISOString().slice(0, 10)
+        todayGroup.textContent = generatedDate.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' })
+        previousReports.insertBefore(todayGroup, previousReports.children[1])
+      }
+      previousReports.insertBefore(history, todayGroup.nextSibling)
+      troubleReportState.textContent = '보고서 작성 완료'
+      troubleReportState.classList.add('created')
       generateBtn.innerHTML = '<i data-lucide="check"></i>생성 완료'
     } catch (error) {
       generateBtn.innerHTML = '<i data-lucide="triangle-alert"></i>생성 실패'
@@ -271,24 +486,52 @@
       const values = [
         documentNo.textContent,
         generatedAt.textContent,
-        'L2',
-        '200개',
-        '108개',
+        targetLine.textContent.trim(),
+        `${numberValue(planQty)}개`,
+        `${numberValue(actualQty)}개`,
         `${shortageQty.textContent}개`,
         '11분 56초',
-        'L2',
+        targetLine.textContent.trim(),
         'L2 프레스 3단',
         '14:20:12',
         'Pressure 1 상한 초과 (356 / 상한 350)',
         '9시간 35분 29초',
         `${shortageQty.textContent}개`,
-        '200개',
-        '108개'
+        `${numberValue(planQty)}개`,
+        `${numberValue(actualQty)}개`
       ]
       const escapeValue = value => String(value)
         .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
       values.forEach(value => { template = template.replace('빈칸', escapeValue(value)) })
       if (template.includes('빈칸')) throw new Error('템플릿 값 치환이 완료되지 않았습니다')
+
+      // 3~6번 항목은 화면 보고서 내용 그대로 채운다
+      const font = 'font-size:9.0pt;font-family:"맑은 고딕";color:black'
+      const text = el => escapeValue(el.textContent.trim())
+      const cellFirst = 'border:solid black 1.0pt;border-top:none;mso-border-top-alt:solid black .75pt;mso-border-alt:solid black .75pt;padding:1.5pt 3.0pt 1.5pt 3.0pt'
+      const cellRest = 'border-top:none;border-left:none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;mso-border-top-alt:solid black .75pt;mso-border-left-alt:solid black .75pt;mso-border-alt:solid black .75pt;padding:1.5pt 3.0pt 1.5pt 3.0pt'
+      const allocationRows = [...alloc.querySelectorAll('tr')].map(row => '<tr>' + [...row.cells].map((cell, i) =>
+        `<td style='${i === 0 ? cellFirst : cellRest}'><p class=MsoNormal${i === 0 ? '' : " align=right style='text-align:right'"}><span style='${font}'>${text(cell)}<o:p></o:p></span></p></td>`
+      ).join('') + '</tr>').join('\n')
+      const actions = [...actionList.children].map((li, i) =>
+        `<p class=MsoNormal style='margin-top:0cm;margin-right:0cm;margin-bottom:1.0pt;margin-left:36.0pt;text-indent:-18.0pt;mso-list:l1 level1 lfo1;tab-stops:list 36.0pt'><![if !supportLists]><span style='${font}'><span style='mso-list:Ignore'>${i + 1}.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]><span style='${font}'>${text(li)}<o:p></o:p></span></p>`
+      ).join('\n')
+      const risks = [...riskList.children].map(li =>
+        `<li class=MsoNormal style='color:black;margin-bottom:1.0pt;mso-list:l0 level1 lfo2;tab-stops:list 36.0pt'><span style='font-size:9.0pt;font-family:"맑은 고딕"'>${text(li)}<o:p></o:p></span></li>`
+      ).join('\n')
+      const sections = {
+        ALLOCATION_TEXT: text(allocationText),
+        ALLOCATION_ROWS: allocationRows,
+        TOTAL_PLAN: text(totalPlan),
+        TOTAL_CAPACITY: text(totalCapacity),
+        TOTAL_ALLOCATION: text(totalAllocation),
+        RESULT_GRADE: text(resultGrade),
+        RESULT_TEXT: text(resultText),
+        ACTIONS: actions,
+        RISKS: risks
+      }
+      Object.entries(sections).forEach(([key, html]) => { template = template.split(`{{${key}}}`).join(html) })
+      if (/\{\{[A-Z_]+\}\}/.test(template)) throw new Error('템플릿 항목 치환이 완료되지 않았습니다')
 
       const outputBytes = new Uint8Array(2 + template.length * 2)
       outputBytes[0] = 0xff

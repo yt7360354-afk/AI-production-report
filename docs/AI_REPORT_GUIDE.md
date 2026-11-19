@@ -2,7 +2,7 @@
 
 ## 구현된 데모 흐름
 
-1. 사용자가 프론트의 `AI 보고서` 탭에서 조건을 확인하고 생성 버튼을 누른다.
+1. 사용자가 계획수정 보고서 화면(`B-report.html`)에서 조건을 확인하고 생성 버튼을 누른다.
 2. 프론트가 `POST /api/v1/ai-reports/generate`를 호출한다.
 3. 백엔드가 목표·납기·실적을 기준으로 부족 수량을 계산한다.
 4. 백엔드가 정상 라인의 가용 능력 안에서 추가 수량을 배정한다.
@@ -20,9 +20,11 @@ cd backend
 
 ```powershell
 cd frontend
-npm ci
+npm install
 npm run dev
 ```
+
+또는 저장소 루트에서 `.\run-report.ps1` 로 둘 다 실행한다.
 
 기본값 `AI_REPORT_MOCK=true`에서는 API 키가 없어도 동작한다.
 
@@ -37,7 +39,7 @@ AI_REPORT_MODEL=gpt-4.1-mini
 
 ## 운영 DB 연결
 
-현재 `AiReport.vue`의 더미 입력을 없애고 백엔드에서 다음 데이터를 조회해 `AiReportRequest`와 같은 형태의 스냅샷을 만든다.
+현재 `B-report.html`의 더미 입력을 없애고 백엔드에서 다음 데이터를 조회해 `AiReportRequest`와 같은 형태의 스냅샷을 만든다.
 
 - 고장 설비·원인·시각: `downtime_event`, `downtime_code`, `equipment`, `alarm`
 - 목표 생산량: `production_target`

@@ -1,34 +1,14 @@
-# 모두가 같은 설정. 비밀번호는 여기에 적지 않아요 (application-local.yml 에 적어요)
 spring:
   application:
-    name: sfaas
-  profiles:
-    active: local
-  datasource:
-    url: jdbc:postgresql://localhost:5432/sfaas
-    username: sfaas_app
-  jpa:
-    hibernate:
-      ddl-auto: validate        # 바꾸지 마세요. 테이블은 schema.sql 로만 만들어요
-    open-in-view: false
-    properties:
-      hibernate:
-        jdbc:
-          time_zone: Asia/Seoul
-        format_sql: true
+    name: ai-production-report
   jackson:
     time-zone: Asia/Seoul
 
 server:
   port: 8080
 
-# MQTT (ingest 패키지에서 사용 예정)
-mqtt:
-  broker-url: tcp://localhost:1883
-  topic-raw: sfaas/raw/#
-
-# 기본값은 API 키 없이 동작하는 시연 모드입니다.
-# 운영 전환: AI_REPORT_MOCK=false, AI_REPORT_API_KEY, AI_REPORT_MODEL 설정
+# 기본값은 API 키 없이 동작하는 시연 모드(mock)입니다.
+# 운영 전환: AI_REPORT_MOCK=false, AI_REPORT_API_KEY, AI_REPORT_MODEL 환경 변수 설정
 ai:
   report:
     mock: ${AI_REPORT_MOCK:true}

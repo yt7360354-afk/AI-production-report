@@ -1,17 +1,28 @@
-**/node_modules/
-**/dist/
-**/build/
-**/.gradle/
-**/.npm-cache/
-**/.npm-logs/
-**/.runtime/
-**/.tools/
-**/.claude/
-**/.impeccable/
-**/*.log
+# 의존성 / 빌드 결과
+node_modules/
+dist/
+backend/build/
+backend/.gradle/
+.gradle/
+.gradle-home/
+
+# 로컬 도구·캐시
+.tools/
+.codex-run/
+frontend/.runtime/
+frontend/.npm-cache/
+frontend/.claude/
+frontend/.impeccable/
 .idea/
 .vscode/
-.DS_Store
-*.png
-*.docx
 
+# 실행 로그
+logs/
+*.log
+
+# 비밀 정보 (API 키 등)
+.env
+application-local.yml
+
+# 이전 Vue 버전 잔여 파일 (리포트 화면에서 사용 안 함)
+frontend/src/

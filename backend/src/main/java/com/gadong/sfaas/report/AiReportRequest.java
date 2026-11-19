@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record AiReportRequest(
+        @NotNull Long downtimeId,
         @NotBlank String lineId,
         @NotBlank String equipmentId,
         @NotBlank String equipmentName,
@@ -20,7 +21,8 @@ public record AiReportRequest(
         @Min(0) int dueQty,
         @NotBlank String dueAt,
         @NotEmpty List<@Valid LineCondition> lineConditions,
-        String operatorNote
+        String operatorNote,
+        String additionalRequest
 ) {
     public record LineCondition(
             @NotBlank String lineId,
