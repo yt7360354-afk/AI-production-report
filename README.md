@@ -44,6 +44,7 @@ backend/               Spring Boot 3.5 (Java 17)
     AiReportRequest / AiReportResponse / AiReportProperties / AiReportConfig
 docs/
   AI_REPORT_GUIDE.md   설계 원칙과 운영 전환 가이드
+  INTEGRATION_GUIDE.md 팀 API 명세서 v3 · DB 스키마 v0.3.9 기준 프론트·백엔드 연동 가이드
   form-source/DAILYREPORT양식.htm   일일 보고서 Word 양식 원본
 tools/daily-template/  양식 원본 → 템플릿(.doc) 변환 스크립트
 ```
