@@ -15,4 +15,6 @@ ai:
     base-url: ${AI_REPORT_BASE_URL:https://api.openai.com/v1}
     api-key: ${AI_REPORT_API_KEY:}
     model: ${AI_REPORT_MODEL:gpt-4.1-mini}
-    timeout-seconds: ${AI_REPORT_TIMEOUT_SECONDS:30}
+    timeout-seconds: ${AI_REPORT_TIMEOUT_SECONDS:30}   # LLM 연결·응답 제한 시간. 넘으면 템플릿 문장으로 대체
+    # 재배정 후보 라인 상태 (명세서 RSID). D(고장)·S(계획정지)는 제외. I(대기) 포함 여부는 팀 확정 후 조정
+    allocatable-statuses: R,DC,I

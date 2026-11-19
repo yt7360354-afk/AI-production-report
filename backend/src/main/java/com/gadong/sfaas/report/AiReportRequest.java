@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public record AiReportRequest(
@@ -15,7 +15,7 @@ public record AiReportRequest(
         @NotBlank String equipmentId,
         @NotBlank String equipmentName,
         @NotBlank String faultReason,
-        @NotNull LocalDateTime faultStartedAt,
+        @NotNull OffsetDateTime faultStartedAt,
         @Min(0) int targetQty,
         @Min(0) int completedQty,
         @Min(0) int dueQty,

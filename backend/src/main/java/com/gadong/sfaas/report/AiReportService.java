@@ -2,12 +2,18 @@ package com.gadong.sfaas.report;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -16,12 +22,17 @@ import java.util.Map;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
 @Service
 public class AiReportService {
-    private static final Pattern LINE_PATTERN = Pattern.compile("(?i)L\\s*(\\d+)");
+    private static final Logger log = LoggerFactory.getLogger(AiReportService.class);
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
+    /** 라인 코드 A~F (명세서 lineId). 예: "A라인", "b 라인", "C line", "A, B라인", "A·C 라인" */
+    private static final Pattern LINE_PATTERN = Pattern.compile(
+            "(?i)(?<![A-Z0-9-])([A-F](?:\\s*[,·/와과및]\\s*[A-F])*)\\s*(?:라인|line)");
+    private static final Pattern LINE_LETTER = Pattern.compile("(?i)[A-F]");
     private static final String SYSTEM_PROMPT = """
             당신은 제조 현장의 생산계획 조정 보고서를 작성하는 전문가다.
             제공된 JSON 사실만 사용하고 값을 추측하지 않는다.
@@ -38,7 +49,11 @@ public class AiReportService {
     public AiReportService(AiReportProperties properties, ObjectMapper objectMapper, RestClient.Builder builder) {
         this.properties = properties;
         this.objectMapper = objectMapper;
-        this.restClient = builder.baseUrl(properties.baseUrl()).build();
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        Duration timeout = Duration.ofSeconds(properties.timeoutSeconds() > 0 ? properties.timeoutSeconds() : 30);
+        requestFactory.setConnectTimeout(timeout);
+        requestFactory.setReadTimeout(timeout);
+        this.restClient = builder.baseUrl(properties.baseUrl()).requestFactory(requestFactory).build();
     }
 
     public AiReportResponse generate(AiReportRequest request) {
@@ -59,11 +74,25 @@ public class AiReportService {
         }
         List<AiReportResponse.Allocation> allocations = allocate(
                 shortage, request.lineId(), request.lineConditions(), new LinkedHashSet<>(interpretation.excludedLines()));
-        Draft draft = properties.mock() ? mockDraft(request, shortage, allocations) : callLlm(request, shortage, allocations);
+        Draft draft;
+        String fallbackReason = null;
+        if (properties.mock()) {
+            draft = mockDraft(request, shortage, allocations);
+        } else {
+            try {
+                draft = callLlm(request, shortage, allocations);
+            } catch (LlmUnavailableException e) {
+                // 수량 계산은 이미 끝났으므로 문장만 템플릿으로 대신 만든다 (보고서 생성 자체는 실패시키지 않음)
+                log.warn("LLM 보고서 생성 실패, 템플릿으로 대체합니다: {}", e.getMessage(), e.getCause());
+                fallbackReason = e.getMessage();
+                draft = mockDraft(request, shortage, allocations);
+            }
+        }
+        boolean usedTemplate = properties.mock() || fallbackReason != null;
 
         return new AiReportResponse(
-                UUID.randomUUID().toString(), request.downtimeId(), LocalDateTime.now(),
-                properties.mock() ? "mock-template" : properties.model(), properties.mock(),
+                UUID.randomUUID().toString(), request.downtimeId(), OffsetDateTime.now(KST).truncatedTo(ChronoUnit.SECONDS),
+                usedTemplate ? "mock-template" : properties.model(), usedTemplate, fallbackReason,
                 shortage, draft.title(), draft.summary(), draft.actions(), allocations, draft.risks(), draft.markdown(), interpretation);
     }
 
@@ -76,16 +105,18 @@ public class AiReportService {
         Set<String> excludedLines = new LinkedHashSet<>();
         Set<String> stoppedLines = new LinkedHashSet<>();
         String normalized = request.replaceAll("\\s+", " ").trim();
-        Matcher matcher = LINE_PATTERN.matcher(normalized);
-        while (matcher.find()) {
-            String lineId = "L" + matcher.group(1);
-            int start = Math.max(0, matcher.start() - 40);
-            int end = Math.min(normalized.length(), matcher.end() + 80);
-            String context = normalized.substring(start, end);
-            if (context.matches(".*(제외|빼|배정하지|사용하지|금지).*")) excludedLines.add(lineId);
-            if (context.matches(".*(정지|중단|멈춰|멈춤|세워).*")) {
-                stoppedLines.add(lineId);
-                excludedLines.add(lineId);
+        // 라인 언급마다 "그 언급부터 다음 라인 언급 전까지"만 보고 지시어를 찾는다.
+        // 예: "A라인은 제외하고 F라인 정지" → A: 제외 / F: 정지 (앞 라인의 지시어가 뒤 라인에 섞이지 않게)
+        List<MatchResult> mentions = LINE_PATTERN.matcher(normalized).results().toList();
+        for (int i = 0; i < mentions.size(); i++) {
+            MatchResult mention = mentions.get(i);
+            int end = i + 1 < mentions.size() ? mentions.get(i + 1).start() : normalized.length();
+            String context = normalized.substring(mention.end(), end);
+            boolean exclude = context.matches(".*(제외|빼|배정하지|사용하지|금지).*");
+            boolean stop = context.matches(".*(정지|중단|멈춰|멈춤|세워).*");
+            for (String lineId : LINE_LETTER.matcher(mention.group(1)).results().map(r -> r.group().toUpperCase()).toList()) {
+                if (exclude || stop) excludedLines.add(lineId);
+                if (stop) stoppedLines.add(lineId);
             }
         }
 
@@ -107,7 +138,7 @@ public class AiReportService {
         List<AiReportRequest.LineCondition> candidates = conditions.stream()
                 .filter(line -> !line.lineId().equals(stoppedLine))
                 .filter(line -> !excludedLines.contains(line.lineId().toUpperCase()))
-                .filter(line -> "RUNNING".equalsIgnoreCase(line.status()))
+                .filter(line -> isAllocatable(line.status()))
                 .filter(line -> line.availableCapacity() > 0)
                 .sorted(Comparator.comparing(AiReportRequest.LineCondition::lineId))
                 .toList();
@@ -153,6 +184,11 @@ public class AiReportService {
                 .toList();
     }
 
+    /** 명세서 상태값(R/S/I/D/DC) 중 재배정 후보가 될 수 있는 상태인지 (설정 ai.report.allocatable-statuses) */
+    private boolean isAllocatable(String status) {
+        return status != null && properties.allocatableStatuses().stream().anyMatch(status.trim()::equalsIgnoreCase);
+    }
+
     private record AllocationShare(AiReportRequest.LineCondition line, double remainder) {
     }
 
@@ -181,7 +217,7 @@ public class AiReportService {
 
     private Draft callLlm(AiReportRequest request, int shortage, List<AiReportResponse.Allocation> allocations) {
         if (properties.apiKey() == null || properties.apiKey().isBlank()) {
-            throw new IllegalStateException("AI_REPORT_API_KEY가 설정되지 않았습니다.");
+            throw new LlmUnavailableException("AI_REPORT_API_KEY가 설정되지 않았습니다", null);
         }
         try {
             Map<String, Object> facts = new LinkedHashMap<>();
@@ -204,12 +240,30 @@ public class AiReportService {
                     .retrieve()
                     .body(String.class);
             JsonNode content = objectMapper.readTree(raw).path("choices").path(0).path("message").path("content");
-            return objectMapper.readValue(content.asText(), Draft.class);
+            Draft draft = objectMapper.readValue(content.asText(), Draft.class);
+            if (isBlank(draft.title()) || isBlank(draft.summary()) || draft.actions() == null || draft.risks() == null) {
+                throw new LlmUnavailableException("LLM 응답 형식이 올바르지 않습니다", null);
+            }
+            return draft;
+        } catch (LlmUnavailableException e) {
+            throw e;
         } catch (Exception e) {
-            throw new IllegalStateException("LLM 보고서 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.", e);
+            // 키·응답 본문이 섞일 수 있어 원인 메시지는 로그에만 남기고 화면에는 일반 문구만 보낸다
+            throw new LlmUnavailableException("LLM 호출에 실패했거나 " + properties.timeoutSeconds() + "초 안에 응답하지 않았습니다", e);
         }
     }
 
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    }
+
     private record Draft(String title, String summary, List<String> actions, List<String> risks, String markdown) {
+    }
+
+    /** LLM 을 쓸 수 없을 때(키 없음·호출 실패·시간 초과·응답 형식 오류). 템플릿으로 대체하는 신호로만 쓴다. */
+    static class LlmUnavailableException extends RuntimeException {
+        LlmUnavailableException(String message, Throwable cause) {
+            super(message, cause);
+        }
     }
 }

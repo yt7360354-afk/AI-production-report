@@ -154,24 +154,24 @@
       <div class="list" id="reportList">
         <h3 class="list-section">현재 트러블 슈팅</h3>
         <div class="trouble-card" id="currentTrouble" data-downtime-id="5001" role="button" tabindex="0">
-          <div class="trouble-top"><b>L2 프레스 3단</b><time>14:20:12 발생</time></div>
-          <p>Pressure 1 상한 초과 · 장비고장(알람) · 현재 조치 중</p>
+          <div class="trouble-top"><b>B라인 프레스 3호기</b><time>14:20:12 발생</time></div>
+          <p>압력 차(좌-우) 상한 초과 · 알람(관리값 이탈) · 현재 조치 중</p>
           <span class="trouble-badge" id="troubleReportState">보고서 미작성</span>
         </div>
         <div class="previous-reports" id="previousReports">
           <h3 class="list-section">이전에 작성한 보고서</h3>
           <div class="d">2026-11-14 (토)</div>
-          <a href="#" data-archive-id="report-1114"><b>L4 프레스 2단</b><time>16:40:05</time><span>AI 계획수정 보고서</span></a>
+          <a href="#" data-archive-id="report-1114"><b>D라인 프레스 2호기</b><time>16:40:05</time><span>AI 계획수정 보고서</span></a>
           <div class="d">2026-11-12 (목)</div>
-          <a href="#" data-archive-id="report-1112-paint"><b>도장 #1</b><time>09:12:44</time><span>AI 계획수정 보고서</span></a>
-          <a href="#" data-archive-id="report-1112-l6"><b>L6 슬리팅</b><time>03:05:18</time><span>AI 계획수정 보고서</span></a>
+          <a href="#" data-archive-id="report-1112-paint"><b>도장 1호기</b><time>09:12:44</time><span>AI 계획수정 보고서</span></a>
+          <a href="#" data-archive-id="report-1112-l6"><b>F라인 슬리팅 1호기</b><time>03:05:18</time><span>AI 계획수정 보고서</span></a>
         </div>
       </div>
     </section>
 
     <section class="panel doc">
       <div class="doc-head">
-        <div><h2 id="reportTitle">계획수정 보고서 · L2 프레스 3단</h2><p id="reportMeta">현재 공정·설비 조건을 기준으로 작성된 의사결정 지원 보고서</p></div>
+        <div><h2 id="reportTitle">계획수정 보고서 · B라인 프레스 3호기</h2><p id="reportMeta">현재 공정·설비 조건을 기준으로 작성된 의사결정 지원 보고서</p></div>
         <button class="btn primary" id="generateBtn"><i data-lucide="sparkles"></i>AI 보고서 생성</button>
         <button class="btn" id="docBtn" disabled><i data-lucide="file-text"></i>Google Docs(.doc)</button>
         <button class="btn" id="pdfBtn" disabled><i data-lucide="download"></i>PDF 다운로드</button>
@@ -180,7 +180,7 @@
       <div class="report-tools">
         <div class="request-box">
           <label for="additionalRequest">AI 추가 요청</label>
-          <textarea id="additionalRequest" placeholder="예: L1은 긴급 주문 생산 중이므로 재배정 대상에서 제외하고 납기 준수를 우선해줘."></textarea>
+          <textarea id="additionalRequest" placeholder="예: A라인은 긴급 주문 생산 중이므로 재배정 대상에서 제외하고 납기 준수를 우선해줘."></textarea>
         </div>
         <div class="tool-actions">
           <button class="btn" id="editBtn" disabled><i data-lucide="pencil"></i>값 수정</button>
@@ -196,32 +196,32 @@
         <p class="document-class">PRODUCTION PLAN REVISION REPORT</p>
         <table class="doc-info">
           <tr><th>문서번호</th><td id="documentNo">AI-RPT-20261116-001</td><th>작성일시</th><td id="generatedAt">2026-11-16 14:24:31</td></tr>
-          <tr><th>대상 라인</th><td id="targetLine" class="report-editable">L2</td><th>작성 구분</th><td id="modelName">AI 분석 초안</td></tr>
-          <tr><th>작성자</th><td class="report-editable">김현수</td><th>문서 상태</th><td id="documentStatus">검토 대기</td></tr>
+          <tr><th>대상 라인</th><td id="targetLine" class="report-editable">B</td><th>작성 구분</th><td id="modelName">AI 분석 초안</td></tr>
+          <tr><th>작성자</th><td id="authorName" class="report-editable">김현수</td><th>문서 상태</th><td id="documentStatus">검토 대기</td></tr>
         </table>
         <div class="summary-grid">
           <div class="summary-item"><span>생산 계획</span><b id="planQty" class="report-editable">200</b><small>개</small></div>
           <div class="summary-item"><span>현재 실적</span><b id="actualQty" class="report-editable">108</b><small>개</small></div>
           <div class="summary-item"><span>예상 부족</span><b id="summaryShortage">92<small>개</small></b></div>
-          <div class="summary-item"><span>정지 지속</span><b>11:56</b></div>
+          <div class="summary-item"><span>정지 지속</span><b id="stopDuration">11:56</b></div>
         </div>
       </header>
 
       <section>
         <h3>1. 발생 현황</h3>
         <div>
-          <p id="incidentText" class="report-editable">L2 프레스 3단이 14:20:12에 장비고장(알람)으로 멈췄습니다. 라인 안 설비는 한 줄로 이어져 있어 L2 전체가 멈춘 것으로 보고 계산했습니다.</p>
-          <dl class="facts"><dt>라인</dt><dt>설비</dt><dt>발생</dt><dt>원인</dt><dd>L2</dd><dd>L2 프레스 3단</dd><dd>14:20:12</dd><dd>Pressure 1 상한 초과 (356 / 상한 350)</dd></dl>
+          <p id="incidentText" class="report-editable">B라인 프레스 3호기가 14:20:12에 알람(관리값 이탈)으로 멈췄습니다. 라인 안 설비는 한 줄로 이어져 있어 B라인 전체가 멈춘 것으로 보고 계산했습니다.</p>
+          <dl class="facts"><dt>라인</dt><dt>설비</dt><dt>발생</dt><dt>원인</dt><dd id="factLine">B</dd><dd id="factEquipment">B라인 프레스 3호기</dd><dd id="factStart">14:20:12</dd><dd id="factCause">압력 차(좌-우) 상한 초과 (13.4 / 상한 12.5)</dd></dl>
         </div>
       </section>
 
       <section>
         <h3>2. 생산 영향</h3>
         <div>
-          <p>L2가 자정까지 만들 예정이던 라인 계획이 부족 수량입니다.</p>
+          <p><span class="impact-line">B</span>라인이 자정까지 만들 예정이던 라인 계획이 부족 수량입니다.</p>
           <div class="calc">
-            <div><div class="st-l">남은 시간</div><div class="st-v">9:35:29</div><div class="st-sub">14:24:31 ~ 24:00</div></div>
-            <div><div class="st-l">L2 남은 라인 계획</div><div class="st-v"><span id="shortageQty">92</span><small>개</small></div><div class="st-sub">라인 계획 200 − 실적 108</div></div>
+            <div><div class="st-l">남은 시간</div><div class="st-v" id="remainingTime">9:35:29</div><div class="st-sub" id="remainingRange">14:24:31 ~ 24:00</div></div>
+            <div><div class="st-l"><span class="impact-line">B</span>라인 남은 라인 계획</div><div class="st-v"><span id="shortageQty">92</span><small>개</small></div><div class="st-sub" id="planDiffText">라인 계획 200 − 실적 108</div></div>
           </div>
         </div>
       </section>
@@ -229,7 +229,7 @@
       <section>
         <h3>3. 생산 재배정안</h3>
         <div>
-          <p id="allocationText" class="report-editable">정상 라인 5개의 남은 능력 비율대로 92개를 나눴습니다. 남은 능력 = 남은 시간 ÷ 라인 CT 120초 − 남은 라인 계획.</p>
+          <p id="allocationText" class="report-editable">정상 라인 5개의 남은 능력 비율대로 92개를 나눴습니다. 남은 능력 = 남은 시간 ÷ 라인 처리 시간 17초(시간당 약 211개) − 남은 라인 계획.</p>
           <table class="tbl">
             <thead><tr><th>라인</th><th class="num">남은 라인 계획</th><th class="num">남은 능력</th><th class="num">비율</th><th class="num">추가 배정</th></tr></thead>
             <tbody id="alloc"></tbody>
@@ -267,49 +267,95 @@
 <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <script>
   renderTop('리포트')
-  // 데모 값: 남은 시간 34,529초 ÷ 120 = 287개
-  const A = [['L1', 69, 218, 19, 'RUNNING'], ['L2', 92, 0, 0, 'STOPPED'], ['L3', 73, 214, 18, 'RUNNING'], ['L4', 81, 206, 18, 'RUNNING'], ['L5', 70, 217, 19, 'RUNNING'], ['L6', 73, 214, 18, 'RUNNING']]
-  const renderAllocationRows = (allocationByLine = {}, excludedLines = [], requestedStops = []) => {
-    const capacity = A.reduce((sum, [, , cap]) => sum + cap, 0)
-    alloc.innerHTML = A.map(([lineId, currentPlan, availableCapacity, defaultAdd, status]) => {
-      const unavailable = status === 'STOPPED' || requestedStops.includes(lineId) || excludedLines.includes(lineId)
-      const add = unavailable ? 0 : (allocationByLine[lineId] ?? defaultAdd)
-      const rowClass = status === 'STOPPED' || requestedStops.includes(lineId) ? 'stopped' : excludedLines.includes(lineId) ? 'excluded' : ''
-      const label = status === 'STOPPED' ? `${lineId} (정지)` : requestedStops.includes(lineId) ? `${lineId} (요청 정지)` : excludedLines.includes(lineId) ? `${lineId} (제외)` : lineId
-      return `<tr class="${rowClass}"><td>${label}</td><td class="num">${currentPlan}</td><td class="num">${availableCapacity}</td><td class="num">${capacity ? (availableCapacity / capacity * 100).toFixed(1) : '0.0'}%</td><td class="num add">${add > 0 ? '+' : ''}${add}</td></tr>`
+  // ── 현재 트러블 (데모 값, 연동 후 U-08 진행 중 비가동 + M-04 알람으로 대체) ──
+  const CURRENT_TROUBLE = {
+    downtimeId: 5001, lineId: 'B', equipmentId: 'B-PR3', equipmentName: 'B라인 프레스 3호기',
+    faultReason: '압력 차(좌-우) 상한 초과 (13.4 / 상한 12.5)', faultStartedAt: '2026-11-16T14:20:12+09:00'
+  }
+
+  // ── 라인 생산 능력: 명세서·seed.sql 기준 (연동 후 process.cycle_time_sec 에서 읽음) ──
+  // 라인 능력은 가장 느린 라인 공정 기준: 슬리팅 16 · 프레스 17 · 용접 17초 → 17초, 시간당 약 211개
+  const LINE_CYCLE_SEC = 17
+  const REMAINING_SEC = 34529                                   // 보고서 기준 14:24:31 ~ 24:00
+  const LINE_MAX_QTY = Math.floor(REMAINING_SEC / LINE_CYCLE_SEC)  // 남은 시간 동안 라인 최대 생산 2,031개
+  // 재배정 후보 상태 (백엔드 ai.report.allocatable-statuses 와 같게): D 고장 · S 계획정지는 제외
+  const ALLOCATABLE = ['R', 'DC', 'I']
+  const STATUS_LABEL = { D: '고장', S: '계획정지', I: '대기', DC: '통신 끊김' }
+
+  // [라인, 남은 라인 계획, 상태(R/S/I/D/DC)] → 남은 능력 = 라인 최대 생산 − 남은 라인 계획 (불가 상태면 0)
+  const A = [['A', 69, 'R'], ['B', 92, 'D'], ['C', 73, 'R'], ['D', 81, 'R'], ['E', 70, 'R'], ['F', 73, 'R']]
+    .map(([lineId, currentPlan, status]) => [lineId, currentPlan, ALLOCATABLE.includes(status) ? Math.max(0, LINE_MAX_QTY - currentPlan) : 0, 0, status])
+
+  // statusByLine: 이전 보고서처럼 그때의 라인 상태로 다시 그릴 때 덮어쓸 상태
+  const renderAllocationRows = (allocationByLine = {}, excludedLines = [], requestedStops = [], statusByLine = {}) => {
+    const rows = A.map(([lineId, currentPlan, availableCapacity, defaultAdd, baseStatus]) => {
+      const status = statusByLine[lineId] ?? baseStatus
+      const blocked = !ALLOCATABLE.includes(status)
+      const capacity = blocked ? 0 : availableCapacity
+      // 비율·합계는 실제로 배정받을 수 있는 라인만 (고장·계획정지·요청 정지·제외 라인은 0%)
+      const usable = !blocked && !requestedStops.includes(lineId) && !excludedLines.includes(lineId)
+      return { lineId, currentPlan, capacity, defaultAdd, status, blocked, usable }
+    })
+    const totalCapacity = rows.reduce((sum, row) => sum + (row.usable ? row.capacity : 0), 0)
+    alloc.innerHTML = rows.map(({ lineId, currentPlan, capacity, defaultAdd, status, blocked, usable }) => {
+      const add = usable ? (allocationByLine[lineId] ?? defaultAdd) : 0
+      const share = usable && totalCapacity ? capacity / totalCapacity * 100 : 0
+      const rowClass = blocked || requestedStops.includes(lineId) ? 'stopped' : excludedLines.includes(lineId) ? 'excluded' : ''
+      const label = blocked ? `${lineId} (${STATUS_LABEL[status] || status})` : requestedStops.includes(lineId) ? `${lineId} (요청 정지)` : excludedLines.includes(lineId) ? `${lineId} (제외)` : lineId
+      return `<tr class="${rowClass}"><td>${label}</td><td class="num">${currentPlan}</td><td class="num">${capacity.toLocaleString('ko-KR')}</td><td class="num">${share.toFixed(1)}%</td><td class="num add">${add > 0 ? '+' : ''}${add}</td></tr>`
     }).join('')
+    return totalCapacity
   }
   renderAllocationRows()
-  const conditions = A.map(([lineId, currentPlan, availableCapacity, , status]) => ({ lineId, status, availableCapacity, currentPlan, constraint: status === 'STOPPED' ? '설비 정지' : '동일 제품 생산 가능' }))
+  const conditions = A.map(([lineId, currentPlan, availableCapacity, , status]) => ({
+    lineId, status, availableCapacity, currentPlan,
+    constraint: ALLOCATABLE.includes(status) ? '동일 제품 생산 가능' : `${STATUS_LABEL[status] || status} 상태`
+  }))
 
   const archivedReports = {
     'report-1114': {
-      documentNo: 'AI-RPT-20261114-004', generatedAt: '2026-11-14 16:40:05', line: 'L4', equipment: 'L4 프레스 2단',
+      documentNo: 'AI-RPT-20261114-004', generatedAt: '2026-11-14 16:40:05', line: 'D', equipment: 'D라인 프레스 2호기',
+      start: '16:40:05', cause: '금형 위치 센서 이상 (장비고장)', stop: '0:48:20', remaining: '7:19:55',
       plan: 240, actual: 151, shortage: 89, status: '승인 완료',
-      incident: 'L4 프레스 2단에서 금형 위치 센서 이상이 발생하여 16:40:05부터 라인이 정지되었습니다. 미생산 예정 수량 89개를 정상 가동 라인에 재배정했습니다.',
-      allocation: { L1: 23, L2: 0, L3: 22, L4: 0, L5: 22, L6: 22 }, stopped: ['L2', 'L4'],
+      incident: 'D라인 프레스 2호기에서 금형 위치 센서 이상이 발생하여 16:40:05부터 라인이 정지되었습니다. 미생산 예정 수량 89개를 정상 가동 라인에 재배정했습니다.',
+      allocation: { A: 23, B: 0, C: 22, D: 0, E: 22, F: 22 }, stopped: ['B', 'D'],
       result: '정상 가동 중인 4개 라인에 89개를 재배정하여 당일 납기 수량을 확보했습니다.',
-      actions: ['L4 금형 위치 센서와 배선 상태를 점검합니다.', 'L1·L3·L5·L6에 재배정 수량과 작업 순서를 전달합니다.', '시험 생산 5개 확인 후 L4 재가동 여부를 결정합니다.'],
-      risks: ['L4 복구가 지연되면 다음 교대조 작업 순서를 다시 조정해야 합니다.', '재배정 라인의 금형 교체시간과 자재 투입 상태를 확인해야 합니다.']
+      actions: ['D라인 금형 위치 센서와 배선 상태를 점검합니다.', 'A·C·E·F라인에 재배정 수량과 작업 순서를 전달합니다.', '시험 생산 5개 확인 후 D라인 재가동 여부를 결정합니다.'],
+      risks: ['D라인 복구가 지연되면 다음 교대조 작업 순서를 다시 조정해야 합니다.', '재배정 라인의 금형 교체시간과 자재 투입 상태를 확인해야 합니다.']
     },
     'report-1112-paint': {
-      documentNo: 'AI-RPT-20261112-002', generatedAt: '2026-11-12 09:12:44', line: '도장 #1', equipment: '도장 #1 건조로',
+      documentNo: 'AI-RPT-20261112-002', generatedAt: '2026-11-12 09:12:44', line: 'A·B·C', equipment: '도장 1호기',
+      start: '09:12:44', cause: '온도 하한 미달 (17.9 / 하한 18.54℃)', stop: '0:35:10', remaining: '14:47:16',
       plan: 180, actual: 64, shortage: 116, status: '승인 완료',
-      incident: '도장 #1 건조로 온도가 관리 기준 아래로 내려가 09:12:44부터 투입을 중지했습니다. 품질 확인 전까지 도장 #1 생산계획을 도장 #2와 후속 가능 라인으로 전환했습니다.',
-      allocation: { L1: 28, L2: 0, L3: 30, L4: 29, L5: 29, L6: 0 }, stopped: ['L2', 'L6'],
+      incident: '도장 1호기(PT1) 온도가 관리 하한 아래로 내려가 09:12:44부터 투입을 중지했습니다. 품질 확인 전까지 도장 1호기 생산계획을 도장 2호기(PT2)와 후속 가능 라인으로 전환했습니다.',
+      allocation: { A: 28, B: 0, C: 30, D: 29, E: 29, F: 0 }, stopped: ['B', 'F'],
       result: '대체 공정에 116개를 재배정하고 품질 검사 대기 물량을 분리하여 납기 영향을 최소화했습니다.',
-      actions: ['건조로 온도센서와 히터 출력을 점검합니다.', '대체 라인에 116개 생산 순서를 반영합니다.', '도장 품질 확인 결과에 따라 재투입 물량을 확정합니다.'],
-      risks: ['색상 변경에 따른 세척시간이 추가될 수 있습니다.', '품질 검사 결과에 따라 일부 물량의 재작업이 발생할 수 있습니다.']
+      actions: ['도장 1호기 온도센서와 히터 출력을 점검합니다.', '대체 라인에 116개 생산 순서를 반영합니다.', '도장 품질 확인 결과에 따라 재투입 물량을 확정합니다.'],
+      risks: ['도장 경로 전환(PT1 → PT2)으로 도장 2호기 부하가 늘어날 수 있습니다.', '품질 검사 결과에 따라 일부 물량의 재작업이 발생할 수 있습니다.']
     },
     'report-1112-l6': {
-      documentNo: 'AI-RPT-20261112-001', generatedAt: '2026-11-12 03:05:18', line: 'L6', equipment: 'L6 슬리팅',
+      documentNo: 'AI-RPT-20261112-001', generatedAt: '2026-11-12 03:05:18', line: 'F', equipment: 'F라인 슬리팅 1호기',
+      start: '03:05:18', cause: '장력 제어 알람 (장비고장)', stop: '0:52:40', remaining: '20:54:42',
       plan: 160, actual: 87, shortage: 73, status: '승인 완료',
-      incident: 'L6 슬리팅 장력 제어 알람으로 03:05:18부터 설비가 정지되었습니다. L6 잔여 계획 73개는 L1·L3·L4·L5로 분산했습니다.',
-      allocation: { L1: 19, L2: 0, L3: 18, L4: 18, L5: 18, L6: 0 }, stopped: ['L2', 'L6'],
+      incident: 'F라인 슬리팅 1호기 장력 제어 알람으로 03:05:18부터 설비가 정지되었습니다. F라인 잔여 계획 73개는 A·C·D·E라인으로 분산했습니다.',
+      allocation: { A: 19, B: 0, C: 18, D: 18, E: 18, F: 0 }, stopped: ['B', 'F'],
       result: '정지 라인 추가 배정을 0개로 유지하고 정상 라인에 73개를 배정하여 계획 수량을 확보했습니다.',
-      actions: ['L6 장력 센서와 롤러 정렬 상태를 확인합니다.', '정상 4개 라인에 재배정 수량을 반영합니다.', 'L6 복구 후 시험 가동 결과를 생산관리 팀장에게 보고합니다.'],
+      actions: ['F라인 장력 센서와 롤러 정렬 상태를 확인합니다.', '정상 4개 라인에 재배정 수량을 반영합니다.', 'F라인 복구 후 시험 가동 결과를 생산관리 팀장에게 보고합니다.'],
       risks: ['소재 폭 사양에 따라 일부 라인에서 생산이 제한될 수 있습니다.', '복구 후 최초 생산품의 치수 검사가 필요합니다.']
     }
+  }
+
+  // 1. 발생 현황 표, 정지 지속, 2. 생산 영향(남은 시간·라인 계획)을 보고서 대상에 맞춰 채운다
+  const setTroubleFacts = facts => {
+    factLine.textContent = facts.line
+    factEquipment.textContent = facts.equipment
+    factStart.textContent = facts.start
+    factCause.textContent = facts.cause
+    stopDuration.textContent = facts.stop
+    remainingTime.textContent = facts.remaining
+    remainingRange.textContent = facts.range
+    planDiffText.textContent = `라인 계획 ${facts.plan} − 실적 ${facts.actual}`
+    document.querySelectorAll('.impact-line').forEach(el => { el.textContent = facts.line })
   }
 
   const showArchivedReport = report => {
@@ -325,10 +371,12 @@
     summaryShortage.childNodes[0].textContent = report.shortage
     shortageQty.textContent = report.shortage
     incidentText.textContent = report.incident
-    allocationText.textContent = `${report.line} 정지로 발생한 부족 수량 ${report.shortage}개를 가동 가능한 라인에 재배정했습니다. 정지 라인의 추가 배정은 0개입니다.`
-    renderAllocationRows(report.allocation, [], report.stopped)
+    setTroubleFacts({ line: report.line, equipment: report.equipment, start: report.start, cause: report.cause, stop: report.stop,
+      remaining: report.remaining, range: `${report.generatedAt.slice(11)} ~ 24:00`, plan: report.plan, actual: report.actual })
+    allocationText.textContent = `${report.line}라인 정지로 발생한 부족 수량 ${report.shortage}개를 가동 가능한 라인에 재배정했습니다. 정지 라인의 추가 배정은 0개입니다.`
+    const archivedCapacity = renderAllocationRows(report.allocation, [], [], Object.fromEntries(report.stopped.map(line => [line, 'D'])))
     totalPlan.textContent = A.reduce((sum, [, plan]) => sum + plan, 0).toLocaleString('ko-KR')
-    totalCapacity.textContent = A.reduce((sum, [, , capacity]) => sum + capacity, 0).toLocaleString('ko-KR')
+    totalCapacity.textContent = archivedCapacity.toLocaleString('ko-KR')
     totalAllocation.textContent = Object.values(report.allocation).reduce((sum, qty) => sum + qty, 0).toLocaleString('ko-KR')
     resultGrade.textContent = '계획 반영 완료'
     resultGrade.className = 'grade ok'
@@ -405,6 +453,7 @@
     const shortage = Math.max(0, numberValue(planQty) - numberValue(actualQty))
     shortageQty.textContent = String(shortage)
     summaryShortage.innerHTML = `${shortage}<small>개</small>`
+    planDiffText.textContent = `라인 계획 ${numberValue(planQty)} − 실적 ${numberValue(actualQty)}`
   }
 
   let editing = false
@@ -444,27 +493,31 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          ...CURRENT_TROUBLE,
           downtimeId: Number(currentTrouble.dataset.downtimeId),
-          lineId: 'L2', equipmentId: 'L2-PR3', equipmentName: 'L2 프레스 3단',
-          faultReason: 'Pressure 1 상한 초과 (356 / 상한 350)', faultStartedAt: '2026-11-16T14:20:12',
           targetQty: 200, completedQty: 108, dueQty: 200, dueAt: '2026-11-16 24:00',
           lineConditions: conditions,
           operatorNote: '품질 확인 후 재가동 필요',
           additionalRequest: additionalRequest.value.trim()
         })
       })
-      if (!res.ok) throw new Error(`서버 오류 ${res.status}`)
+      if (!res.ok) {
+        // 백엔드 공통 오류 형식 { status, code, message, timestamp }
+        const error = await res.json().catch(() => null)
+        throw new Error(error?.message || `서버 오류 ${res.status}`)
+      }
       const report = await res.json()
       const assigned = report.allocations.reduce((sum, x) => sum + x.quantity, 0)
-      const capacity = conditions.reduce((sum, x) => sum + x.availableCapacity, 0)
-      const conditionByLine = Object.fromEntries(conditions.map(x => [x.lineId, x]))
       reportTitle.firstChild.textContent = `계획수정 보고서 · ${report.title} `
       reportMeta.textContent = `${new Date(report.generatedAt).toLocaleString('ko-KR')} 생성 · AI 초안 · 제안만 하며 목표와 설비 계획은 바꾸지 않음`
       if (additionalRequest.value.trim()) reportMeta.textContent += ` · 추가 요청 반영: ${additionalRequest.value.trim()}`
-      documentNo.textContent = `AI-RPT-${new Date(report.generatedAt).toISOString().slice(0,10).replaceAll('-', '')}-${report.reportId.slice(0, 6).toUpperCase()}`
-      generatedAt.textContent = new Date(report.generatedAt).toLocaleString('ko-KR')
-      modelName.textContent = report.mock ? 'AI 분석 초안(데모)' : `AI 분석 초안(${report.model})`
-      incidentText.textContent = `${targetLine.textContent.trim()} ${report.summary}`
+      if (report.fallbackReason) reportMeta.textContent += ` · AI 연결 실패로 템플릿 문장 사용 (${report.fallbackReason})`
+      // generatedAt 은 KST(+09:00) ISO 문자열이라 앞부분을 그대로 쓰면 브라우저 시간대와 관계없이 한국 시각이 된다
+      const generatedKst = report.generatedAt.slice(0, 19).replace('T', ' ')
+      documentNo.textContent = `AI-RPT-${generatedKst.slice(0, 10).replaceAll('-', '')}-${report.reportId.slice(0, 6).toUpperCase()}`
+      generatedAt.textContent = generatedKst
+      modelName.textContent = report.fallbackReason ? 'AI 분석 초안(템플릿 대체)' : report.mock ? 'AI 분석 초안(데모)' : `AI 분석 초안(${report.model})`
+      incidentText.textContent = report.summary
       const calculatedShortage = report.calculatedShortage ?? (numberValue(planQty) - numberValue(actualQty))
       shortageQty.textContent = String(calculatedShortage)
       summaryShortage.innerHTML = `${calculatedShortage}<small>개</small>`
@@ -475,7 +528,7 @@
         <div><b>적용 규칙</b>${interpretation.appliedRules.join(' · ')}</div>`
       requestResultPanel.classList.add('on')
       const allocationByLine = Object.fromEntries(report.allocations.map(x => [x.lineId, x.quantity]))
-      renderAllocationRows(allocationByLine, interpretation.excludedLines, interpretation.stoppedLines || [])
+      const capacity = renderAllocationRows(allocationByLine, interpretation.excludedLines, interpretation.stoppedLines || [])
       const activeAllocationLines = report.allocations.filter(x => x.quantity > 0).map(x => x.lineId).join(', ')
       allocationText.textContent = `총 ${calculatedShortage}개를 잔여 생산능력 비율에 따라 ${activeAllocationLines || '배정 가능한 라인 없음'}에 재배정합니다. 정지·제외 라인에는 추가 배정하지 않습니다.`
       totalPlan.textContent = conditions.reduce((sum, x) => sum + x.currentPlan, 0).toLocaleString('ko-KR')
@@ -488,9 +541,9 @@
         ? `재배정 필요 수량 ${calculatedShortage}개 전량을 정상 라인에 배정할 수 있어 계산상 목표 달성이 가능합니다.`
         : `재배정 필요 수량 중 ${unresolved}개가 미배정되어 추가 생산계획 조정 또는 납기 협의가 필요합니다.`
       const allocationAction = report.allocations.filter(x => x.quantity > 0)
-        .map(x => `${x.lineId} ${x.quantity}개`).join(', ')
+        .map(x => `${x.lineId}라인 ${x.quantity}개`).join(', ')
       actionList.innerHTML = [
-        `${targetLine.textContent.trim()} 정지 설비의 안전 상태와 고장 원인을 확인합니다.`,
+        `${CURRENT_TROUBLE.equipmentName}의 안전 상태와 고장 원인을 확인합니다.`,
         `재배정안을 적용합니다: ${allocationAction || '배정 가능한 라인 없음'}.`,
         '생산관리자와 품질담당자의 검토·승인 후 계획에 반영합니다.'
       ].map(x => `<li>${x}</li>`).join('')
@@ -510,14 +563,14 @@
       history.href = '#'
       history.className = 'on'
       history.dataset.current = 'true'
-      history.innerHTML = `<b>L2 프레스 3단</b><time>${new Date(report.generatedAt).toLocaleTimeString('ko-KR', { hour12: false })}</time><span>AI 계획수정 보고서</span>`
+      history.innerHTML = `<b>${CURRENT_TROUBLE.equipmentName}</b><time>${generatedKst.slice(11)}</time><span>AI 계획수정 보고서</span>`
       reportList.querySelectorAll('a').forEach(x => x.classList.remove('on'))
       let todayGroup = previousReports.querySelector('[data-generated-date]')
       if (!todayGroup) {
         const generatedDate = new Date(report.generatedAt)
         todayGroup = document.createElement('div')
         todayGroup.className = 'd'
-        todayGroup.dataset.generatedDate = generatedDate.toISOString().slice(0, 10)
+        todayGroup.dataset.generatedDate = generatedKst.slice(0, 10)
         todayGroup.textContent = generatedDate.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' })
         previousReports.insertBefore(todayGroup, previousReports.children[1])
       }
@@ -528,6 +581,7 @@
     } catch (error) {
       generateBtn.innerHTML = '<i data-lucide="triangle-alert"></i>생성 실패'
       resultText.textContent = `${error.message}. 백엔드 서버 상태를 확인해 주세요.`
+      reportMeta.textContent = `보고서 생성 실패: ${error.message}`
     } finally {
       generateBtn.disabled = false
       lucide.createIcons()
@@ -541,6 +595,12 @@
       if (!response.ok) throw new Error(`템플릿을 불러오지 못했습니다 (${response.status})`)
       const sourceBytes = await response.arrayBuffer()
       let template = new TextDecoder('utf-16le').decode(sourceBytes)
+      // "1:02:03" → "1시간 2분 3초", "11:56" → "11분 56초"
+      const durationText = el => {
+        const parts = el.textContent.trim().split(':').map(Number)
+        const [h, m, s] = parts.length === 3 ? parts : [0, ...parts]
+        return `${h ? `${h}시간 ` : ''}${m}분 ${s}초`
+      }
       const values = [
         documentNo.textContent,
         generatedAt.textContent,
@@ -548,12 +608,12 @@
         `${numberValue(planQty)}개`,
         `${numberValue(actualQty)}개`,
         `${shortageQty.textContent}개`,
-        '11분 56초',
-        targetLine.textContent.trim(),
-        'L2 프레스 3단',
-        '14:20:12',
-        'Pressure 1 상한 초과 (356 / 상한 350)',
-        '9시간 35분 29초',
+        durationText(stopDuration),
+        factLine.textContent.trim(),
+        factEquipment.textContent.trim(),
+        factStart.textContent.trim(),
+        factCause.textContent.trim(),
+        durationText(remainingTime),
         `${shortageQty.textContent}개`,
         `${numberValue(planQty)}개`,
         `${numberValue(actualQty)}개`
@@ -578,6 +638,10 @@
         `<li class=MsoNormal style='color:black;margin-bottom:1.0pt;mso-list:l0 level1 lfo2;tab-stops:list 36.0pt'><span style='font-size:9.0pt;font-family:"맑은 고딕"'>${text(li)}<o:p></o:p></span></li>`
       ).join('\n')
       const sections = {
+        TARGET_LINE: text(factLine),
+        MODEL_NAME: text(modelName),
+        DOC_STATUS: text(documentStatus),
+        AUTHOR: text(authorName),
         ALLOCATION_TEXT: text(allocationText),
         ALLOCATION_ROWS: allocationRows,
         TOTAL_PLAN: text(totalPlan),

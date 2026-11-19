@@ -62,9 +62,16 @@ tools/daily-template/  양식 원본 → 템플릿(.doc) 변환 스크립트
 ```text
 AI_REPORT_MOCK=false
 AI_REPORT_API_KEY=...
-AI_REPORT_BASE_URL=https://api.openai.com/v1
+AI_REPORT_BASE_URL=https://api.openai.com/v1      # OpenAI 호환 /chat/completions (JSON 응답 형식 지원 필요)
 AI_REPORT_MODEL=gpt-4.1-mini
+AI_REPORT_TIMEOUT_SECONDS=30                       # 넘으면 템플릿 문장으로 대체
 ```
+
+- LLM 호출이 실패하거나(키 없음·시간 초과·응답 형식 오류) 하면 보고서 생성은 계속하고 문장만 템플릿으로 만듭니다. 화면 "작성 구분"이 `AI 분석 초안(템플릿 대체)`로 바뀌고 제목 아래에 이유가 표시됩니다.
+- 실제 LLM으로 생성되면 "작성 구분"이 `AI 분석 초안(모델명)`으로 표시됩니다.
+- 이미 실행 중인 백엔드에는 환경 변수가 반영되지 않습니다. 백엔드를 끄고, 환경 변수를 설정한 같은 PowerShell 창에서 `run-report.ps1` 을 다시 실행하세요.
+- 라인·설비 ID와 상태 값은 팀 API 명세서 기준입니다: 라인 `A`~`F`, 설비 `B-PR3`, 상태 `R/S/I/D/DC` (재배정 후보 `ai.report.allocatable-statuses`, 기본 `R,DC,I`).
+- 오류 응답은 `{ "status", "code", "message", "timestamp" }` 형식입니다.
 
 ## 일일 보고서 양식 수정
 
