@@ -144,7 +144,7 @@
 
 <main class="page rep">
   <div class="head">
-    <h1>리포트</h1>
+    <h1>AI 리포트</h1>
     <div class="tabs"><a href="B-daily.html">일일 생산 리포트</a><a class="on" href="#">계획수정 보고서</a></div>
   </div>
 
@@ -159,12 +159,35 @@
           <span class="trouble-badge" id="troubleReportState">보고서 미작성</span>
         </div>
         <div class="previous-reports" id="previousReports">
-          <h3 class="list-section">이전에 작성한 보고서</h3>
-          <div class="d">2026-11-14 (토)</div>
+          <h3 class="list-section" id="previousHeading">이전에 작성한 보고서</h3>
+          <div class="d" data-date="2026-11-14">2026-11-14 (토)</div>
           <a href="#" data-archive-id="report-1114"><b>D라인 프레스 2호기</b><time>16:40:05</time><span>AI 계획수정 보고서</span></a>
-          <div class="d">2026-11-12 (목)</div>
+          <a href="#" data-archive-id="report-1114-0758"><b>B라인 용접 1호기</b><time>07:58:30</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-13">2026-11-13 (금)</div>
+          <a href="#" data-archive-id="report-1113-2241"><b>C라인 용접 2호기</b><time>22:41:07</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-12">2026-11-12 (목)</div>
           <a href="#" data-archive-id="report-1112-paint"><b>도장 1호기</b><time>09:12:44</time><span>AI 계획수정 보고서</span></a>
           <a href="#" data-archive-id="report-1112-l6"><b>F라인 슬리팅 1호기</b><time>03:05:18</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-11">2026-11-11 (수)</div>
+          <a href="#" data-archive-id="report-1111-1405"><b>E라인 프레스 1호기</b><time>14:05:32</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-10">2026-11-10 (화)</div>
+          <a href="#" data-archive-id="report-1110-1018"><b>A라인 슬리팅 2호기</b><time>10:18:09</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-07">2026-11-07 (토)</div>
+          <a href="#" data-archive-id="report-1107-1952"><b>B라인 검사기 1호기</b><time>19:52:47</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-06">2026-11-06 (금)</div>
+          <a href="#" data-archive-id="report-1106-0833"><b>D라인 용접 1호기</b><time>08:33:21</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-04">2026-11-04 (수)</div>
+          <a href="#" data-archive-id="report-1104-1347"><b>F라인 프레스 2호기</b><time>13:47:02</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-11-02">2026-11-02 (월)</div>
+          <a href="#" data-archive-id="report-1102-0615"><b>C라인 슬리팅 1호기</b><time>06:15:44</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-10-30">2026-10-30 (금)</div>
+          <a href="#" data-archive-id="report-1030-1609"><b>E라인 이송 컨베이어</b><time>16:09:58</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-10-28">2026-10-28 (수)</div>
+          <a href="#" data-archive-id="report-1028-1126"><b>A라인 프레스 3호기</b><time>11:26:13</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-10-24">2026-10-24 (토)</div>
+          <a href="#" data-archive-id="report-1024-2103"><b>D라인 검사기 2호기</b><time>21:03:36</time><span>AI 계획수정 보고서</span></a>
+          <div class="d" data-date="2026-10-21">2026-10-21 (수)</div>
+          <a href="#" data-archive-id="report-1021-1537"><b>F라인 용접 2호기</b><time>15:37:49</time><span>AI 계획수정 보고서</span></a>
         </div>
       </div>
     </section>
@@ -266,7 +289,7 @@
 <script src="b.js"></script>
 <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
 <script>
-  renderTop('리포트')
+  renderTop('AI 리포트')
   // ── 현재 트러블 (데모 값, 연동 후 U-08 진행 중 비가동 + M-04 알람으로 대체) ──
   const CURRENT_TROUBLE = {
     downtimeId: 5001, lineId: 'B', equipmentId: 'B-PR3', equipmentName: 'B라인 프레스 3호기',
@@ -342,7 +365,19 @@
       result: '정지 라인 추가 배정을 0개로 유지하고 정상 라인에 73개를 배정하여 계획 수량을 확보했습니다.',
       actions: ['F라인 장력 센서와 롤러 정렬 상태를 확인합니다.', '정상 4개 라인에 재배정 수량을 반영합니다.', 'F라인 복구 후 시험 가동 결과를 생산관리 팀장에게 보고합니다.'],
       risks: ['소재 폭 사양에 따라 일부 라인에서 생산이 제한될 수 있습니다.', '복구 후 최초 생산품의 치수 검사가 필요합니다.']
-    }
+    },
+    'report-1114-0758': {"documentNo": "AI-RPT-20261114-003", "generatedAt": "2026-11-14 07:58:30", "line": "B", "equipment": "B라인 용접 1호기", "start": "07:58:30", "cause": "용접 토치 냉각 불량 (장비고장)", "stop": "0:41:10", "remaining": "16:01:30", "plan": 220, "actual": 40, "shortage": 180, "status": "승인 완료", "incident": "B라인 용접 1호기에서 '용접 토치 냉각 불량' 이상이 발생하여 07:58:30부터 라인이 정지되었습니다. 미생산 예정 수량 180개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 0, "B": 0, "C": 45, "D": 45, "E": 45, "F": 45}, "stopped": ["B", "A"], "result": "정상 가동 중인 4개 라인(C·D·E·F)에 180개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["토치 냉각수 라인과 펌프 압력을 점검합니다.", "C·D·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "B라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["용접 품질 확인 전 생산품은 비드 외관 검사가 필요합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1113-2241': {"documentNo": "AI-RPT-20261113-001", "generatedAt": "2026-11-13 22:41:07", "line": "C", "equipment": "C라인 용접 2호기", "start": "22:41:07", "cause": "용접 전류 상한 초과 (장비고장)", "stop": "0:27:15", "remaining": "1:18:53", "plan": 200, "actual": 81, "shortage": 119, "status": "승인 완료", "incident": "C라인 용접 2호기에서 '용접 전류 상한 초과' 이상이 발생하여 22:41:07부터 라인이 정지되었습니다. 미생산 예정 수량 119개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 24, "B": 24, "C": 0, "D": 24, "E": 24, "F": 23}, "stopped": ["C"], "result": "정상 가동 중인 5개 라인(A·B·D·E·F)에 119개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["용접 전원 장치와 케이블 접촉 상태를 점검합니다.", "A·B·D·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "C라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["야간조 인원이 적어 재배정 라인의 작업 전환이 늦어질 수 있습니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1111-1405': {"documentNo": "AI-RPT-20261111-001", "generatedAt": "2026-11-11 14:05:32", "line": "E", "equipment": "E라인 프레스 1호기", "start": "14:05:32", "cause": "유압 저하 알람 (장비고장)", "stop": "1:05:40", "remaining": "9:54:28", "plan": 160, "actual": 20, "shortage": 140, "status": "승인 완료", "incident": "E라인 프레스 1호기에서 '유압 저하 알람' 이상이 발생하여 14:05:32부터 라인이 정지되었습니다. 미생산 예정 수량 140개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 28, "B": 28, "C": 28, "D": 28, "E": 0, "F": 28}, "stopped": ["E"], "result": "정상 가동 중인 5개 라인(A·B·C·D·F)에 140개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["유압 펌프와 작동유 누유 여부를 확인합니다.", "A·B·C·D·F라인에 재배정 수량과 작업 순서를 전달합니다.", "E라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["유압 부품 교체가 필요하면 복구가 다음 근무조로 넘어갈 수 있습니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1110-1018': {"documentNo": "AI-RPT-20261110-001", "generatedAt": "2026-11-10 10:18:09", "line": "A", "equipment": "A라인 슬리팅 2호기", "start": "10:18:09", "cause": "소재 사행 감지 (품질이상)", "stop": "0:21:30", "remaining": "13:41:51", "plan": 180, "actual": 93, "shortage": 87, "status": "승인 완료", "incident": "A라인 슬리팅 2호기에서 '소재 사행 감지' 이상이 발생하여 10:18:09부터 라인이 정지되었습니다. 미생산 예정 수량 87개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 0, "B": 18, "C": 18, "D": 17, "E": 17, "F": 17}, "stopped": ["A"], "result": "정상 가동 중인 5개 라인(B·C·D·E·F)에 87개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["소재 코일 정렬과 가이드 롤러 위치를 조정합니다.", "B·C·D·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "A라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["사행 구간 소재는 폭 치수 재검사가 필요합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1107-1952': {"documentNo": "AI-RPT-20261107-001", "generatedAt": "2026-11-07 19:52:47", "line": "B", "equipment": "B라인 검사기 1호기", "start": "19:52:47", "cause": "비전 카메라 통신 끊김", "stop": "0:39:05", "remaining": "4:07:13", "plan": 240, "actual": 82, "shortage": 158, "status": "승인 완료", "incident": "B라인 검사기 1호기에서 '비전 카메라 통신 끊김' 이상이 발생하여 19:52:47부터 라인이 정지되었습니다. 미생산 예정 수량 158개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 32, "B": 0, "C": 32, "D": 32, "E": 31, "F": 31}, "stopped": ["B"], "result": "정상 가동 중인 5개 라인(A·C·D·E·F)에 158개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["카메라 케이블과 검사 PC 네트워크 연결을 확인합니다.", "A·C·D·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "B라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["통신 끊김 구간 생산품은 수동 검사로 대체해야 합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1106-0833': {"documentNo": "AI-RPT-20261106-001", "generatedAt": "2026-11-06 08:33:21", "line": "D", "equipment": "D라인 용접 1호기", "start": "08:33:21", "cause": "냉각수 유량 하한 미달", "stop": "0:44:50", "remaining": "15:26:39", "plan": 160, "actual": 20, "shortage": 140, "status": "승인 완료", "incident": "D라인 용접 1호기에서 '냉각수 유량 하한 미달' 이상이 발생하여 08:33:21부터 라인이 정지되었습니다. 미생산 예정 수량 140개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 28, "B": 28, "C": 28, "D": 0, "E": 28, "F": 28}, "stopped": ["D"], "result": "정상 가동 중인 5개 라인(A·B·C·E·F)에 140개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["냉각수 필터 막힘과 유량계 값을 확인합니다.", "A·B·C·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "D라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["냉각 부족이 재발하면 용접 품질 저하가 우려됩니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1104-1347': {"documentNo": "AI-RPT-20261104-001", "generatedAt": "2026-11-04 13:47:02", "line": "F", "equipment": "F라인 프레스 2호기", "start": "13:47:02", "cause": "금형 파손 감지 (장비고장)", "stop": "2:10:15", "remaining": "10:12:58", "plan": 180, "actual": 20, "shortage": 160, "status": "승인 완료", "incident": "F라인 프레스 2호기에서 '금형 파손 감지' 이상이 발생하여 13:47:02부터 라인이 정지되었습니다. 미생산 예정 수량 160개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 32, "B": 32, "C": 32, "D": 32, "E": 32, "F": 0}, "stopped": ["F"], "result": "정상 가동 중인 5개 라인(A·B·C·D·E)에 160개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["파손 금형을 예비 금형으로 교체하고 초도품을 검사합니다.", "A·B·C·D·E라인에 재배정 수량과 작업 순서를 전달합니다.", "F라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["예비 금형 수명이 짧아 정식 금형 수리 일정을 잡아야 합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1102-0615': {"documentNo": "AI-RPT-20261102-001", "generatedAt": "2026-11-02 06:15:44", "line": "C", "equipment": "C라인 슬리팅 1호기", "start": "06:15:44", "cause": "칼날 마모 경고 (계획 외 교체)", "stop": "0:33:00", "remaining": "17:44:16", "plan": 160, "actual": 29, "shortage": 131, "status": "승인 완료", "incident": "C라인 슬리팅 1호기에서 '칼날 마모 경고' 이상이 발생하여 06:15:44부터 라인이 정지되었습니다. 미생산 예정 수량 131개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 33, "B": 0, "C": 0, "D": 33, "E": 33, "F": 32}, "stopped": ["C", "B"], "result": "정상 가동 중인 4개 라인(A·D·E·F)에 131개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["슬리팅 칼날을 교체하고 절단면 버(burr)를 확인합니다.", "A·D·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "C라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["칼날 예비품 재고가 1세트만 남아 추가 발주가 필요합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1030-1609': {"documentNo": "AI-RPT-20261030-001", "generatedAt": "2026-10-30 16:09:58", "line": "E", "equipment": "E라인 이송 컨베이어", "start": "16:09:58", "cause": "컨베이어 모터 과부하", "stop": "0:58:25", "remaining": "7:50:02", "plan": 240, "actual": 20, "shortage": 220, "status": "승인 완료", "incident": "E라인 이송 컨베이어에서 '컨베이어 모터 과부하' 이상이 발생하여 16:09:58부터 라인이 정지되었습니다. 미생산 예정 수량 220개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 44, "B": 44, "C": 44, "D": 44, "E": 0, "F": 44}, "stopped": ["E"], "result": "정상 가동 중인 5개 라인(A·B·C·D·F)에 220개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["모터 전류와 감속기 윤활 상태를 점검합니다.", "A·B·C·D·F라인에 재배정 수량과 작업 순서를 전달합니다.", "E라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["과부하 원인이 적재 불균형이면 작업 표준 보완이 필요합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1028-1126': {"documentNo": "AI-RPT-20261028-001", "generatedAt": "2026-10-28 11:26:13", "line": "A", "equipment": "A라인 프레스 3호기", "start": "11:26:13", "cause": "압력 차(좌-우) 상한 초과", "stop": "0:36:40", "remaining": "12:33:47", "plan": 220, "actual": 64, "shortage": 156, "status": "승인 완료", "incident": "A라인 프레스 3호기에서 '압력 차(좌-우) 상한 초과' 이상이 발생하여 11:26:13부터 라인이 정지되었습니다. 미생산 예정 수량 156개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 0, "B": 32, "C": 31, "D": 31, "E": 31, "F": 31}, "stopped": ["A"], "result": "정상 가동 중인 5개 라인(B·C·D·E·F)에 156개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["좌·우 압력 센서 보정값과 슬라이드 평행도를 점검합니다.", "B·C·D·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "A라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["압력 편차 구간 생산품의 치수 검사가 필요합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1024-2103': {"documentNo": "AI-RPT-20261024-001", "generatedAt": "2026-10-24 21:03:36", "line": "D", "equipment": "D라인 검사기 2호기", "start": "21:03:36", "cause": "치수 측정값 편차 누적 (품질이상)", "stop": "0:25:10", "remaining": "2:56:24", "plan": 160, "actual": 40, "shortage": 120, "status": "승인 완료", "incident": "D라인 검사기 2호기에서 '치수 측정값 편차 누적' 이상이 발생하여 21:03:36부터 라인이 정지되었습니다. 미생산 예정 수량 120개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 24, "B": 24, "C": 24, "D": 0, "E": 24, "F": 24}, "stopped": ["D"], "result": "정상 가동 중인 5개 라인(A·B·C·E·F)에 120개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["측정 지그 영점과 기준 시편 측정값을 확인합니다.", "A·B·C·E·F라인에 재배정 수량과 작업 순서를 전달합니다.", "D라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["측정 오류 구간 출하품은 재측정 전까지 출하를 보류합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]},
+    'report-1021-1537': {"documentNo": "AI-RPT-20261021-001", "generatedAt": "2026-10-21 15:37:49", "line": "F", "equipment": "F라인 용접 2호기", "start": "15:37:49", "cause": "로봇 원점 이탈 알람", "stop": "0:47:35", "remaining": "8:22:11", "plan": 180, "actual": 20, "shortage": 160, "status": "승인 완료", "incident": "F라인 용접 2호기에서 '로봇 원점 이탈 알람' 이상이 발생하여 15:37:49부터 라인이 정지되었습니다. 미생산 예정 수량 160개를 정상 가동 라인에 재배정했습니다.", "allocation": {"A": 0, "B": 40, "C": 40, "D": 40, "E": 40, "F": 0}, "stopped": ["F", "A"], "result": "정상 가동 중인 4개 라인(B·C·D·E)에 160개를 재배정하여 당일 계획 수량을 확보했습니다.", "actions": ["용접 로봇 원점 복귀와 티칭 위치를 재확인합니다.", "B·C·D·E라인에 재배정 수량과 작업 순서를 전달합니다.", "F라인 복구 후 시험 생산 결과를 생산관리 팀장에게 보고합니다."], "risks": ["원점 이탈 원인이 충돌이면 지그 손상 여부를 함께 확인해야 합니다.", "재배정 라인의 자재 투입과 작업자 배치 상태를 확인해야 합니다."]}
   }
 
   // 1. 발생 현황 표, 정지 지속, 2. 생산 영향(남은 시간·라인 계획)을 보고서 대상에 맞춰 채운다
@@ -432,6 +467,8 @@
   currentTrouble.addEventListener('keydown', event => {
     if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showCurrent() }
   })
+
+  const applyPeriodFilter = initPeriodFilter(previousReports, previousHeading)
 
   previousReports.addEventListener('click', event => {
     const link = event.target.closest('a')
@@ -571,10 +608,12 @@
         todayGroup = document.createElement('div')
         todayGroup.className = 'd'
         todayGroup.dataset.generatedDate = generatedKst.slice(0, 10)
+        todayGroup.dataset.date = generatedKst.slice(0, 10)
         todayGroup.textContent = generatedDate.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' })
-        previousReports.insertBefore(todayGroup, previousReports.children[1])
+        previousReports.insertBefore(todayGroup, previousReports.querySelector('[data-date]'))
       }
       previousReports.insertBefore(history, todayGroup.nextSibling)
+      applyPeriodFilter()
       troubleReportState.textContent = '보고서 작성 완료'
       troubleReportState.classList.add('created')
       generateBtn.innerHTML = '<i data-lucide="check"></i>생성 완료'
