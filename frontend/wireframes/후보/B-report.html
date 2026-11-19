@@ -32,6 +32,8 @@
 @media (prefers-reduced-motion: reduce) {
   .trouble-card { animation: none; }
 }
+.trouble-card { cursor: pointer; }
+.trouble-card:focus-visible { outline: 2px solid #dc2626; outline-offset: 2px; }
 .trouble-card .trouble-top { display: flex; align-items: center; gap: 7px; }
 .trouble-card b { font-size: 13px; }
 .trouble-card time { margin-left: auto; color: var(--text-3); font-size: 11px; }
@@ -151,7 +153,7 @@
       <div class="ph"><h2>계획수정 보고서</h2><span class="meta">현재·이력</span></div>
       <div class="list" id="reportList">
         <h3 class="list-section">현재 트러블 슈팅</h3>
-        <div class="trouble-card" id="currentTrouble" data-downtime-id="5001">
+        <div class="trouble-card" id="currentTrouble" data-downtime-id="5001" role="button" tabindex="0">
           <div class="trouble-top"><b>L2 프레스 3단</b><time>14:20:12 발생</time></div>
           <p>Pressure 1 상한 초과 · 장비고장(알람) · 현재 조치 중</p>
           <span class="trouble-badge" id="troubleReportState">보고서 미작성</span>
@@ -343,13 +345,59 @@
     lucide.createIcons()
   }
 
+  // 현재 트러블 화면(생성 전 빈 화면 또는 생성·수정한 보고서)을 저장해 두었다가 다시 보여준다
+  let viewingCurrent = true
+  let currentSnapshot = null
+  const generatedSnapshots = {}
+  const actionButtons = () => [editBtn, applyBtn, docBtn, pdfBtn]
+  const takeSnapshot = () => ({
+    title: reportTitle.innerHTML, meta: reportMeta.textContent,
+    doc: reportDocument.innerHTML, docClass: reportDocument.className, empty: reportEmpty.style.display,
+    panelOn: requestResultPanel.classList.contains('on'), grid: requestResultGrid.innerHTML,
+    buttons: actionButtons().map(b => [b.disabled, b.innerHTML])
+  })
+  const restoreSnapshot = s => {
+    reportTitle.innerHTML = s.title
+    reportMeta.textContent = s.meta
+    reportDocument.innerHTML = s.doc
+    reportDocument.className = s.docClass
+    reportEmpty.style.display = s.empty
+    requestResultPanel.classList.toggle('on', s.panelOn)
+    requestResultGrid.innerHTML = s.grid
+    actionButtons().forEach((b, i) => { [b.disabled, b.innerHTML] = s.buttons[i] })
+    lucide.createIcons()
+  }
+  const finishEditing = () => { if (editing) editBtn.click() }
+  const leaveCurrent = () => {
+    finishEditing()
+    if (viewingCurrent) currentSnapshot = takeSnapshot()
+    viewingCurrent = false
+  }
+  const showCurrent = () => {
+    finishEditing()
+    reportList.querySelectorAll('a').forEach(x => x.classList.toggle('on', x.dataset.current === 'true'))
+    if (!viewingCurrent && currentSnapshot) restoreSnapshot(currentSnapshot)
+    viewingCurrent = true
+  }
+
+  currentTrouble.addEventListener('click', showCurrent)
+  currentTrouble.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showCurrent() }
+  })
+
   previousReports.addEventListener('click', event => {
-    const link = event.target.closest('a[data-archive-id]')
+    const link = event.target.closest('a')
     if (!link) return
     event.preventDefault()
+    if (link.dataset.current === 'true') return showCurrent()
+    const snapshot = generatedSnapshots[link.dataset.snapshotId]
+    const archived = archivedReports[link.dataset.archiveId]
+    if (!snapshot && !archived) return
+    leaveCurrent()
     reportList.querySelectorAll('a').forEach(x => x.classList.remove('on'))
     link.classList.add('on')
-    showArchivedReport(archivedReports[link.dataset.archiveId])
+    if (snapshot) restoreSnapshot(snapshot)
+    else showArchivedReport(archived)
   })
 
   const numberValue = element => Number(String(element.textContent).replace(/[^0-9.-]/g, '')) || 0
@@ -379,6 +427,15 @@
   })
 
   generateBtn.addEventListener('click', async () => {
+    showCurrent()
+    // 이미 생성한 보고서가 있으면 그 화면을 보관해 두고, 목록에서 다시 열 수 있게 한다
+    const previousCurrent = previousReports.querySelector('a[data-current="true"]')
+    if (previousCurrent) {
+      const id = `generated-${Object.keys(generatedSnapshots).length + 1}`
+      generatedSnapshots[id] = takeSnapshot()
+      previousCurrent.dataset.current = 'false'
+      previousCurrent.dataset.snapshotId = id
+    }
     generateBtn.disabled = true
     generateBtn.innerHTML = '<i data-lucide="loader-circle"></i>작성 중…'
     lucide.createIcons()
@@ -452,6 +509,7 @@
       const history = document.createElement('a')
       history.href = '#'
       history.className = 'on'
+      history.dataset.current = 'true'
       history.innerHTML = `<b>L2 프레스 3단</b><time>${new Date(report.generatedAt).toLocaleTimeString('ko-KR', { hour12: false })}</time><span>AI 계획수정 보고서</span>`
       reportList.querySelectorAll('a').forEach(x => x.classList.remove('on'))
       let todayGroup = previousReports.querySelector('[data-generated-date]')
